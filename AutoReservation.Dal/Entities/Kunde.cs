@@ -13,6 +13,6 @@ namespace AutoReservation.Dal.Entities
         public String Nachname { get; set; }
         public byte[] RowVersion { get; set; }
         public String Vorname { get; set; }
-        public virtual List<Reservation> Reservations { get; set; }
+        public virtual ICollection<Reservation> Reservations { get; set; }
     }
 }
