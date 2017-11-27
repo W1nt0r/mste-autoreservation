@@ -8,9 +8,13 @@ namespace AutoReservation.Dal.Entities
     public abstract class Auto
     {
         public int Id { get; set; }
+        [Required, MaxLength(20)]
         public string Marke { get; set; }
+        [Timestamp]
         public byte[] RowVersion { get; set; }
+        [Required]
         public int Tagestarif { get; set; }
+
         public ICollection<Reservation> Reservationen { get; set; }
     }
 

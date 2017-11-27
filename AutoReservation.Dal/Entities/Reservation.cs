@@ -5,10 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AutoReservation.Dal.Entities
 {
     public class Reservation
-    { 
-        DateTime Bis { get; set; }
-        DateTime Von { get; set; }
+    {
+        [Key]
         public int ReservationNr { get; set; }
+        [Required]
+        DateTime Bis { get; set; }
+        [Required]
+        DateTime Von { get; set; }
+        [Timestamp]
         public byte[] RowVersion { get; set; }
 
         public int AutoId { get; set; }
