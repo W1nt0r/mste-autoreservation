@@ -1,4 +1,5 @@
-﻿using AutoReservation.Dal.Entities;
+﻿using AutoReservation.BusinessLayer.Exceptions;
+using AutoReservation.Dal.Entities;
 using AutoReservation.TestEnvironment;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -19,33 +20,55 @@ namespace AutoReservation.BusinessLayer.Testing
         }
 
         [TestMethod]
-        public void ScenarioOkay01Test()
+        public void ScenarioExactly24HoursTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            ReservationManager reservationManager = new ReservationManager();
+            Reservation reservation = reservationManager.Reservation(1);
+            DateTime newDateTime = reservation.Bis.AddDays(-1);
+            reservation.Von = newDateTime;
+            reservationManager.Update(reservation);
+            Assert.AreEqual(newDateTime, reservationManager.Reservation(1).Von);
         }
 
         [TestMethod]
-        public void ScenarioOkay02Test()
+        public void Scenario24HoursAnd1SecondTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            ReservationManager reservationManager = new ReservationManager();
+            Reservation reservation = reservationManager.Reservation(1);
+            DateTime newDateTime = reservation.Bis.AddDays(-1).AddSeconds(-1);
+            reservation.Von = newDateTime;
+            reservationManager.Update(reservation);
+            Assert.AreEqual(newDateTime, reservationManager.Reservation(1).Von);
         }
 
         [TestMethod]
-        public void ScenarioNotOkay01Test()
+        [ExpectedException(typeof (InvalidDateRangeException))]
+        public void ScenarioVonEqualsBisTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            ReservationManager reservationManager = new ReservationManager();
+            Reservation reservation = reservationManager.Reservation(1);
+            reservation.Von = reservation.Bis;
+            reservationManager.Update(reservation);
         }
 
         [TestMethod]
-        public void ScenarioNotOkay02Test()
+        [ExpectedException(typeof(InvalidDateRangeException))]
+        public void ScenarioVonIsAfterBisTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            ReservationManager reservationManager = new ReservationManager();
+            Reservation reservation = reservationManager.Reservation(1);
+            reservation.Von = reservation.Bis.AddSeconds(1);
+            reservationManager.Update(reservation);
         }
 
         [TestMethod]
-        public void ScenarioNotOkay03Test()
+        [ExpectedException(typeof(InvalidDateRangeException))]
+        public void ScenarioLessThan24HoursTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            ReservationManager reservationManager = new ReservationManager();
+            Reservation reservation = reservationManager.Reservation(1);
+            reservation.Von = reservation.Bis.AddHours(-24).AddSeconds(1);
+            reservationManager.Update(reservation);
         }
     }
 }

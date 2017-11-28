@@ -114,8 +114,7 @@ namespace AutoReservation.BusinessLayer
             {
                 throw new InvalidDateRangeException("Bis must be after Von");
             }
-            DateTime minBis = reservation.Von;
-            minBis.AddHours(24);
+            DateTime minBis = reservation.Von.AddHours(24);
             if (minBis > reservation.Bis)
             {
                 throw new InvalidDateRangeException("Reservation must be at 24 hours long");
@@ -124,7 +123,7 @@ namespace AutoReservation.BusinessLayer
 
         private void CheckAutoAvailability(AutoReservationContext context, Reservation reservation)
         {
-            if (context.Reservationen.Any(r => r.ReservationsNr != reservation.ReservationsNr && r.AutoId == reservation.AutoId && r.Von <= reservation.Bis && r.Bis >= reservation.Von))
+            if (context.Reservationen.Any(r => r.ReservationsNr != reservation.ReservationsNr && r.AutoId == reservation.AutoId && r.Von < reservation.Bis && r.Bis > reservation.Von))
             {
                 throw new AutoUnavaliableException("auto already reserved in this range");
             }
