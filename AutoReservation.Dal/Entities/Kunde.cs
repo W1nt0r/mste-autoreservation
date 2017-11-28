@@ -18,6 +18,14 @@ namespace AutoReservation.Dal.Entities
         [Timestamp]
         public byte[] RowVersion { get; set; }
 
-        public virtual ICollection<Reservation> Reservations { get; set; }
+        [InverseProperty("Kunde")]
+        public virtual ICollection<Reservation> Reservationen { get; set; }
+
+        public void CopyFrom(Kunde kunde)
+        {
+            Geburtsdatum = kunde.Geburtsdatum;
+            Nachname = kunde.Nachname;
+            Vorname = kunde.Vorname;
+        }
     }
 }

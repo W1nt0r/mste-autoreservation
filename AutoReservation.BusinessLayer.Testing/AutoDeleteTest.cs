@@ -9,7 +9,7 @@ using AutoReservation.BusinessLayer.Exceptions;
 namespace AutoReservation.BusinessLayer.Testing
 {
     [TestClass]
-    public class AutoUpdateTests
+    public class AutoDeleteTests
     {
         private AutoManager target;
         private AutoManager Target => target ?? (target = new AutoManager());
@@ -22,24 +22,22 @@ namespace AutoReservation.BusinessLayer.Testing
         }
 
         [TestMethod]
-        public void UpdateAutoTest()
+        [ExpectedException(typeof(EntityNotFoundException))]
+        public void DeleteAutoTest()
         {
             AutoManager autoManager = new AutoManager();
             Auto auto = autoManager.Auto(1);
-            auto.Marke = "Fiat Multipla";
-            auto.Tagestarif = 100;
-            Auto updatedAuto = autoManager.Update(auto);
-            Assert.AreEqual("Fiat Multipla", updatedAuto.Marke);
-            Assert.AreEqual(100, updatedAuto.Tagestarif);
+            autoManager.Delete(auto);
+            autoManager.Auto(1);
         }
 
         [TestMethod]
         [ExpectedException(typeof(OptimisticConcurrencyException<Auto>))]
-        public void UpdateAutoOptimisticConcurrencyTest()
+        public void DeleteAutoOptimisticConcurrencyTest()
         {
             AutoManager autoManager = new AutoManager();
             Auto auto = new LuxusklasseAuto { Id = 3, Marke = "Tesla", Tagestarif = 320, Basistarif = 10 };
-            autoManager.Update(auto);
+            autoManager.Delete(auto);
         }
     }
 }

@@ -15,7 +15,14 @@ namespace AutoReservation.Dal.Entities
         [Required]
         public int Tagestarif { get; set; }
 
-        public ICollection<Reservation> Reservationen { get; set; }
+        [InverseProperty("Auto")]
+        public virtual ICollection<Reservation> Reservationen { get; set; }
+
+        public virtual void CopyFrom(Auto auto)
+        {
+            Marke = auto.Marke;
+            Tagestarif = auto.Tagestarif;
+        }
     }
 
     public class StandardAuto : Auto { }
@@ -23,6 +30,12 @@ namespace AutoReservation.Dal.Entities
     public class LuxusklasseAuto : Auto
     {
         public int Basistarif { get; set; }
+
+        public override void CopyFrom(Auto auto)
+        {
+            base.CopyFrom(auto);
+            Basistarif = ((LuxusklasseAuto)auto).Basistarif;
+        }
     }
 
     public class MittelklasseAuto : Auto { }

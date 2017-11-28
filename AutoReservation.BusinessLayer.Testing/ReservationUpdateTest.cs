@@ -21,7 +21,11 @@ namespace AutoReservation.BusinessLayer.Testing
         [TestMethod]
         public void UpdateReservationTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            ReservationManager reservationManager = new ReservationManager();
+            Reservation reservation = reservationManager.Reservation(1);
+            reservation.KundeId = 2;
+            Reservation updatedReservation = reservationManager.Update(reservation);
+            Assert.AreEqual("Beil", updatedReservation.Kunde.Nachname);
         }
     }
 }
