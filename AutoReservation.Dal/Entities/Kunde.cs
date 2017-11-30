@@ -6,6 +6,7 @@ using System.Data.Entity;
 
 namespace AutoReservation.Dal.Entities
 {
+    [Table("Kunde")]
     public class Kunde
     {
         public int Id { get; set; }

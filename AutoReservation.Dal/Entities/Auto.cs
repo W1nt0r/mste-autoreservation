@@ -5,6 +5,7 @@ using System.Data.Entity;
 
 namespace AutoReservation.Dal.Entities
 {
+    [Table("Auto")]
     public abstract class Auto
     {
         public int Id { get; set; }
