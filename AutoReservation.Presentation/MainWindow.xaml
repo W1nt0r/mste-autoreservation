@@ -3,12 +3,81 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:local="clr-namespace:AutoReservation.Presentation"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        <TabControl>
+    <Window.Resources>
+        <ResourceDictionary Source="Styles/mainTheme.xaml" />
+    </Window.Resources>
+    <Grid Style="{StaticResource mainGridStyle}">
+        <!--<Button x:Name="AddElementButton" Panel.ZIndex="100" Content="Hinzufügen" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0, 10, 10, 0" Click="addElement"/>-->
+        <TabControl Name="MainControl">
             <TabItem Header="Autos">
+                <DockPanel Style="{StaticResource contentAreaStyle}">
+                    <StackPanel DockPanel.Dock="Top" Style="{StaticResource controlPanelStyle}">
+                        <Button Style="{StaticResource normalButtonStyle}" x:Name="AddElementButton" Content="Hinzufügen" Click="addElement"/>
+                    </StackPanel>
+                    
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ListView ItemsSource="{Binding AutoList}" HorizontalContentAlignment="Stretch" >
+                            <ListView.Template>
+                                <ControlTemplate>
+                                    <Grid Style="{StaticResource mainGridStyle}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Border Style="{StaticResource listBorderHeaderStyle}" >
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="3*" />
+                                                    <ColumnDefinition Width="2.5*" />
+                                                    <ColumnDefinition Width="2*" />
+                                                    <ColumnDefinition Width="1.5*" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Grid.Column="0" Content="Marke" />
+                                                <Label Grid.Column="1" Content="AutoKlasse" />
+                                                <Label Grid.Column="2" Content="Basistarif" />
+                                                <Label Grid.Column="3" Content="Tagestarif" />
+                                            </Grid>
+                                        </Border>
+
+                                        <ItemsPresenter Grid.Row="1" />
+                                    </Grid>
+                                </ControlTemplate>
+                            </ListView.Template>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource listBorderStyle}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3*" />
+                                                <ColumnDefinition Width="2.5*" />
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="1.5*" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+                                            <!--<Border BorderThickness="0, 1, 0, 0" BorderBrush="Black" Grid.ColumnSpan="4" />-->
+
+                                            <Label Grid.Column="0" Content="{Binding Marke}" />
+                                            <Label Grid.Column="1" Content="{Binding AutoKlasse}" />
+                                            <Label Grid.Column="2" Content="{Binding Basistarif}" />
+                                            <Label Grid.Column="3" Content="{Binding Tagestarif}" />
+                                            <Button x:Name="DeleteButton" Grid.Column="4" Style="{StaticResource deleteButtonStyle}" Click="OnRowDelete">
+                                                <Button.Content>
+                                                    <fa:FontAwesome Icon="TrashOutline" Text="Löschen" />
+                                                </Button.Content>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+                </DockPanel>
             </TabItem>
             <TabItem Header="Kunden">
             </TabItem>

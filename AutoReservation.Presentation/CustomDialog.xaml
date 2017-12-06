@@ -1,0 +1,25 @@
+﻿<Window x:Class="AutoReservation.Presentation.CustomDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoReservation.Presentation"
+        mc:Ignorable="d"
+        Title="{Binding Title}" MinHeight="200" MinWidth="200" SizeToContent="WidthAndHeight" MaxHeight="450" MaxWidth="700">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/mainTheme.xaml" />
+                <ResourceDictionary Source="Styles/customDialogStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel Style="{StaticResource contentAreaStyle}">
+        <StackPanel DockPanel.Dock="Bottom">
+            <Button Name="Confirm" Style="{StaticResource normalButtonStyle}" Content="OK" Click="ConfirmClick" />
+            <Button Name="Abort" Style="{StaticResource normalButtonStyle}" Content="Abbrechen" Click="AbortClick" />
+        </StackPanel>
+        
+        <TextBlock Name="Message" Text="" TextWrapping="Wrap" />
+    </DockPanel>
+</Window>
