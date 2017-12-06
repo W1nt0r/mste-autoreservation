@@ -18,7 +18,7 @@ namespace AutoReservation.BusinessLayer
             {
                 using (AutoReservationContext context = new AutoReservationContext())
                 {
-                    return context.Kunden.ToList();
+                    return context.Kunden.Include(r => r.Reservationen).ToList();
                 }
             }
         }
@@ -27,7 +27,7 @@ namespace AutoReservation.BusinessLayer
         {
             using (AutoReservationContext context = new AutoReservationContext())
             {
-                Kunde kunde = context.Kunden.Include("Reservationen").SingleOrDefault(k => k.Id == kundenId);
+                Kunde kunde = context.Kunden.Include(r => r.Reservationen).SingleOrDefault(k => k.Id == kundenId);
                 if (kunde != default(Kunde))
                 {
                     return kunde;
@@ -64,7 +64,7 @@ namespace AutoReservation.BusinessLayer
                         context.SaveChanges();
                         if (context.Entry(kundeFromList).State == EntityState.Unchanged)
                         {
-                            return context.Kunden.Include("Reservationen").SingleOrDefault(k => k.Id == kunde.Id);
+                            return context.Kunden.Include(r => r.Reservationen).SingleOrDefault(k => k.Id == kunde.Id);
                         }
                         throw new DatabaseChangeException("Could not update kunde");
                     }
@@ -82,7 +82,7 @@ namespace AutoReservation.BusinessLayer
         {
             using (AutoReservationContext context = new AutoReservationContext())
             {
-                Kunde kundeFromList = context.Kunden.Include("Reservationen").SingleOrDefault(k => k.Id == kunde.Id);
+                Kunde kundeFromList = context.Kunden.Include(r => r.Reservationen).SingleOrDefault(k => k.Id == kunde.Id);
                 if (kundeFromList != default(Kunde))
                 {
                     context.Entry(kundeFromList).OriginalValues["RowVersion"] = kunde.RowVersion;

@@ -18,7 +18,7 @@ namespace AutoReservation.BusinessLayer
             {
                 using (AutoReservationContext context = new AutoReservationContext())
                 {
-                    return context.Reservationen.ToList();
+                    return context.Reservationen.Include(r => r.Kunde).Include(r => r.Auto).ToList();
                 }
             }
         }
@@ -27,7 +27,7 @@ namespace AutoReservation.BusinessLayer
         {
             using (AutoReservationContext context = new AutoReservationContext())
             {
-                Reservation reservation = context.Reservationen.Include("Kunde").Include("Auto").SingleOrDefault(r => r.ReservationsNr == reservationsNr);
+                Reservation reservation = context.Reservationen.Include(r => r.Kunde).Include(r => r.Auto).SingleOrDefault(r => r.ReservationsNr == reservationsNr);
                 if (reservation != default(Reservation))
                 {
                     return reservation;
@@ -68,7 +68,7 @@ namespace AutoReservation.BusinessLayer
                         context.SaveChanges();
                         if (context.Entry(reservationFromList).State == EntityState.Unchanged)
                         {
-                            return context.Reservationen.Include("Kunde").Include("Auto").SingleOrDefault(r => r.ReservationsNr == reservation.ReservationsNr);
+                            return context.Reservationen.Include(r => r.Kunde).Include(r => r.Auto).SingleOrDefault(r => r.ReservationsNr == reservation.ReservationsNr);
                         }
                         throw new DatabaseChangeException("Could not update reservation");
                     }
@@ -85,7 +85,7 @@ namespace AutoReservation.BusinessLayer
         {
             using (AutoReservationContext context = new AutoReservationContext())
             {
-                Reservation reservationFromList = context.Reservationen.Include("Kunde").Include("Auto").SingleOrDefault(r => r.ReservationsNr == reservation.ReservationsNr);
+                Reservation reservationFromList = context.Reservationen.Include(r => r.Kunde).Include(r => r.Auto).SingleOrDefault(r => r.ReservationsNr == reservation.ReservationsNr);
                 if (reservationFromList != default(Reservation))
                 {
                     context.Entry(reservationFromList).OriginalValues["RowVersion"] = reservation.RowVersion;
