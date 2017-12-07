@@ -1,0 +1,28 @@
+﻿<Window x:Class="AutoReservation.Presentation.NewAutoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoReservation.Presentation"
+        mc:Ignorable="d"
+        Title="NewAutoWindow" Height="300" Width="300">
+    <Window.Resources>
+        <ResourceDictionary Source="Styles/mainTheme.xaml" />
+    </Window.Resources>
+    <Grid Style="{StaticResource mainGridStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="5*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Text="Auto hinzufügen" />
+        <TextBlock Grid.Column="1" Text="Marke" />
+    </Grid>
+</Window>
