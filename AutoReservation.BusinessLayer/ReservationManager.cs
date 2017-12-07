@@ -108,6 +108,22 @@ namespace AutoReservation.BusinessLayer
             }
         }
 
+        private bool IsAutoAvailable(Reservation reservation)
+        {
+            using (AutoReservationContext context = new AutoReservationContext())
+            {
+                try
+                {
+                    CheckAutoAvailability(context, reservation);
+                }
+                catch (AutoUnavaliableException)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         private void CheckDateRangeConstraints(Reservation reservation)
         {
             if (reservation.Von > reservation.Bis)
