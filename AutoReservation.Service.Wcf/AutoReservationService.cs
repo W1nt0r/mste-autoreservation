@@ -72,77 +72,186 @@ namespace AutoReservation.Service.Wcf
         public void GetAllAutos()
         {
             WriteActualMethod();
-            autoManager.List.ConvertToDtos();
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendAllAutos(autoManager.List.ConvertToDtos());
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void GetAllKunden()
         {
             WriteActualMethod();
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendAllKunden(kundeManager.List.ConvertToDtos());
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void GetAllReservationen()
         {
             WriteActualMethod();
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendAllReservationen(reservationManager.List.ConvertToDtos());
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void GetAuto(int id)
         {
             WriteActualMethod();
-
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendAuto(autoManager.Auto(id).ConvertToDto());
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void GetKunde(int id)
         {
             WriteActualMethod();
-
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendKunde(kundeManager.Kunde(id).ConvertToDto());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void GetReservation(int id)
         {
             WriteActualMethod();
-
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendReservation(reservationManager.Reservation(id).ConvertToDto());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
-        public void IsAutoAvailable(ReservationDto kunde)
+        public void IsAutoAvailable(ReservationDto reservation)
         {
             WriteActualMethod();
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendAutoAvailability(reservationManager.IsAutoAvailable(reservation.ConvertToEntity()));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
 
         public void RemoveAuto(AutoDto auto)
         {
             WriteActualMethod();
-            throw new NotImplementedException();
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendAuto(autoManager.Delete(auto.ConvertToEntity()).ConvertToDto());
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void RemoveKunde(KundeDto kunde)
         {
             WriteActualMethod();
-            throw new NotImplementedException();
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendKunde(kundeManager.Delete(kunde.ConvertToEntity()).ConvertToDto());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void RemoveReservation(ReservationDto reservation)
         {
             WriteActualMethod();
-            throw new NotImplementedException();
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendReservation(reservationManager.Delete(reservation.ConvertToEntity()).ConvertToDto());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void UpdateAuto(AutoDto auto)
         {
             WriteActualMethod();
-            throw new NotImplementedException();
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendAuto(autoManager.Update(auto.ConvertToEntity()).ConvertToDto());
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void UpdateKunde(KundeDto kunde)
         {
             WriteActualMethod();
-            throw new NotImplementedException();
+            WriteActualMethod();
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendKunde(kundeManager.Update(kunde.ConvertToEntity()).ConvertToDto());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void UpdateReservation(ReservationDto reservation)
         {
             WriteActualMethod();
-            throw new NotImplementedException();
+            WriteActualMethod();
+            try
+            {
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendReservation(reservationManager.Update(reservation.ConvertToEntity()).ConvertToDto());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

@@ -15,19 +15,19 @@ namespace AutoReservation.Common.Interfaces
         void SendAuto(AutoDto auto);
 
         [OperationContract(IsOneWay = true)]
-        void SendAllAutos(Collection<AutoDto> autos);
+        void SendAllAutos(List<AutoDto> autos);
 
         [OperationContract(IsOneWay = true)]
         void SendKunde(KundeDto kunde);
 
         [OperationContract(IsOneWay = true)]
-        void SendAllKunden(Collection<KundeDto> kunden);
+        void SendAllKunden(List<KundeDto> kunden);
 
         [OperationContract(IsOneWay = true)]
         void SendReservation(ReservationDto reservation);
 
         [OperationContract(IsOneWay = true)]
-        void SendAllReservationen(Collection<ReservationDto> reservationen);
+        void SendAllReservationen(List<ReservationDto> reservationen);
 
         [OperationContract(IsOneWay = true)]
         void SendAutoAvailability(bool available);

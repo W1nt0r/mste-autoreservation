@@ -81,6 +81,6 @@ namespace AutoReservation.Common.Interfaces
         void RemoveKunde(KundeDto kunde);
 
         [OperationContract(IsOneWay = true)]
-        void IsAutoAvailable(ReservationDto kunde);
+        void IsAutoAvailable(ReservationDto reservation);
     }
 }
