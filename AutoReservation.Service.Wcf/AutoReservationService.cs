@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using AutoReservation.Common.DataTransferObjects.Faults;
 using AutoReservation.Common.DataTransferObjects;
 using AutoReservation.Common.Interfaces;
 using AutoReservation.BusinessLayer;
+using AutoReservation.BusinessLayer.Exceptions;
 using AutoReservation.Dal.Entities;
 using System.ServiceModel;
 
@@ -33,9 +35,12 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendAuto(insertedAuto.ConvertToDto());
             }
-            catch (Exception ex)
+            catch (DatabaseChangeException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
@@ -48,9 +53,12 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendKunde(insertedKunde.ConvertToDto());
             }
-            catch (Exception ex)
+            catch (DatabaseChangeException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
@@ -63,52 +71,48 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendReservation(insertedReservation.ConvertToDto());
             }
-            catch (Exception ex)
+            catch (DatabaseChangeException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (AutoUnavaliableException ex)
+            {
+                throw new FaultException<AutoUnavailableFault>(new AutoUnavailableFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (InvalidDateRangeException ex)
+            {
+                throw new FaultException<InvalidDateRangeFault>(new InvalidDateRangeFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
         public void GetAllAutos()
         {
             WriteActualMethod();
-            try
-            {
-                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
-                cb.SendAllAutos(autoManager.List.ConvertToDtos());
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+            cb.SendAllAutos(autoManager.List.ConvertToDtos());
         }
 
         public void GetAllKunden()
         {
             WriteActualMethod();
-            try
-            {
-                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
-                cb.SendAllKunden(kundeManager.List.ConvertToDtos());
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+            cb.SendAllKunden(kundeManager.List.ConvertToDtos());
         }
 
         public void GetAllReservationen()
         {
             WriteActualMethod();
-            try
-            {
-                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
-                cb.SendAllReservationen(reservationManager.List.ConvertToDtos());
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+            cb.SendAllReservationen(reservationManager.List.ConvertToDtos());
         }
 
         public void GetAuto(int id)
@@ -119,9 +123,12 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendAuto(autoManager.Auto(id).ConvertToDto());
             }
-            catch(Exception ex)
+            catch (EntityNotFoundException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<EntityNotFoundFault>(new EntityNotFoundFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
@@ -133,9 +140,12 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendKunde(kundeManager.Kunde(id).ConvertToDto());
             }
-            catch (Exception ex)
+            catch (EntityNotFoundException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<EntityNotFoundFault>(new EntityNotFoundFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
@@ -147,24 +157,20 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendReservation(reservationManager.Reservation(id).ConvertToDto());
             }
-            catch (Exception ex)
+            catch (EntityNotFoundException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<EntityNotFoundFault>(new EntityNotFoundFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
         public void IsAutoAvailable(ReservationDto reservation)
         {
             WriteActualMethod();
-            try
-            {
-                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
-                cb.SendAutoAvailability(reservationManager.IsAutoAvailable(reservation.ConvertToEntity()));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+            cb.SendAutoAvailability(reservationManager.IsAutoAvailable(reservation.ConvertToEntity()));
         }
 
 
@@ -176,9 +182,26 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendAuto(autoManager.Delete(auto.ConvertToEntity()).ConvertToDto());
             }
-            catch(Exception ex)
+            catch(OptimisticConcurrencyException<Auto> ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<OptimisticConcurrencyFault>(new OptimisticConcurrencyFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (DatabaseChangeException ex)
+            {
+                throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                throw new FaultException<EntityNotFoundFault>(new EntityNotFoundFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
@@ -190,9 +213,26 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendKunde(kundeManager.Delete(kunde.ConvertToEntity()).ConvertToDto());
             }
-            catch (Exception ex)
+            catch (OptimisticConcurrencyException<Auto> ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<OptimisticConcurrencyFault>(new OptimisticConcurrencyFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (DatabaseChangeException ex)
+            {
+                throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                throw new FaultException<EntityNotFoundFault>(new EntityNotFoundFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
@@ -204,9 +244,26 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendReservation(reservationManager.Delete(reservation.ConvertToEntity()).ConvertToDto());
             }
-            catch (Exception ex)
+            catch (OptimisticConcurrencyException<Auto> ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<OptimisticConcurrencyFault>(new OptimisticConcurrencyFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (DatabaseChangeException ex)
+            {
+                throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                throw new FaultException<EntityNotFoundFault>(new EntityNotFoundFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
@@ -218,9 +275,26 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendAuto(autoManager.Update(auto.ConvertToEntity()).ConvertToDto());
             }
-            catch(Exception ex)
+            catch (OptimisticConcurrencyException<Auto> ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<OptimisticConcurrencyFault>(new OptimisticConcurrencyFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (DatabaseChangeException ex)
+            {
+                throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                throw new FaultException<EntityNotFoundFault>(new EntityNotFoundFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
@@ -233,9 +307,26 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendKunde(kundeManager.Update(kunde.ConvertToEntity()).ConvertToDto());
             }
-            catch (Exception ex)
+            catch (OptimisticConcurrencyException<Auto> ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<OptimisticConcurrencyFault>(new OptimisticConcurrencyFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (DatabaseChangeException ex)
+            {
+                throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                throw new FaultException<EntityNotFoundFault>(new EntityNotFoundFault
+                {
+                    Message = ex.Message
+                });
             }
         }
 
@@ -248,9 +339,26 @@ namespace AutoReservation.Service.Wcf
                 IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendReservation(reservationManager.Update(reservation.ConvertToEntity()).ConvertToDto());
             }
-            catch (Exception ex)
+            catch (OptimisticConcurrencyException<Auto> ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new FaultException<OptimisticConcurrencyFault>(new OptimisticConcurrencyFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (DatabaseChangeException ex)
+            {
+                throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                throw new FaultException<EntityNotFoundFault>(new EntityNotFoundFault
+                {
+                    Message = ex.Message
+                });
             }
         }
     }

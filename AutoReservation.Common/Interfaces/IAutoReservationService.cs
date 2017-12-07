@@ -41,6 +41,8 @@ namespace AutoReservation.Common.Interfaces
 
         [OperationContract(IsOneWay = true)]
         [FaultContract(typeof(DatabaseChangeFault))]
+        [FaultContract(typeof(InvalidDateRangeFault))]
+        [FaultContract(typeof(AutoUnavailableFault))]
         void AddReservation(ReservationDto reservation);
 
         [OperationContract(IsOneWay = true)]
