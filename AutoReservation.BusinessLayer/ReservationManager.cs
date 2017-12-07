@@ -108,7 +108,7 @@ namespace AutoReservation.BusinessLayer
             }
         }
 
-        private bool IsAutoAvailable(Reservation reservation)
+        public bool IsAutoAvailable(Reservation reservation)
         {
             using (AutoReservationContext context = new AutoReservationContext())
             {
