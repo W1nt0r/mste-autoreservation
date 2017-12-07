@@ -28,5 +28,8 @@ namespace AutoReservation.Common.Interfaces
 
         [OperationContract(IsOneWay = true)]
         void SendAllReservationen(Collection<ReservationDto> reservationen);
+
+        [OperationContract(IsOneWay = true)]
+        void SendAutoAvailability(bool available);
     }
 }
