@@ -44,7 +44,9 @@ namespace AutoReservation.Service.Wcf
             WriteActualMethod();
             try
             {
-                kundeManager.Insert(kunde.ConvertToEntity());
+                Kunde insertedKunde = kundeManager.Insert(kunde.ConvertToEntity());
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendKunde(insertedKunde.ConvertToDto());
             }
             catch (Exception ex)
             {
@@ -57,7 +59,9 @@ namespace AutoReservation.Service.Wcf
             WriteActualMethod();
             try
             {
-                reservationManager.Insert(reservation.ConvertToEntity());
+                Reservation insertedReservation = reservationManager.Insert(reservation.ConvertToEntity());
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendReservation(insertedReservation.ConvertToDto());
             }
             catch (Exception ex)
             {
