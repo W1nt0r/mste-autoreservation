@@ -79,6 +79,7 @@
     <Compile Include="DataTransferObjects\AutoKlasse.cs" />
     <Compile Include="DataTransferObjects\KundeDto.cs" />
     <Compile Include="DataTransferObjects\ReservationDto.cs" />
+    <Compile Include="Interfaces\IAutoReservationResultCallback.cs" />
     <Compile Include="Interfaces\IAutoReservationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
