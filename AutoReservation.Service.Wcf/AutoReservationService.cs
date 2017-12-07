@@ -29,10 +29,9 @@ namespace AutoReservation.Service.Wcf
             WriteActualMethod();
             try
             {
-                autoManager.Insert(auto.ConvertToEntity());
-
-                //IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
-
+                Auto insertedAuto = autoManager.Insert(auto.ConvertToEntity());
+                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
+                cb.SendAuto(insertedAuto.ConvertToDto());
             }
             catch (Exception ex)
             {
