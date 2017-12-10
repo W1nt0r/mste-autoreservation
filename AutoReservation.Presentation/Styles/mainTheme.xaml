@@ -24,6 +24,7 @@
         <Setter Property="BorderBrush" Value="{StaticResource fontColor}"/>
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Foreground" Value="{StaticResource fontColor}" />
+        <Setter Property="Height" Value="40" />
 
         <Setter Property="Template">
             <Setter.Value>
@@ -136,6 +137,10 @@
         <Setter Property="Foreground" Value="{StaticResource fontColor}" />
     </Style>
 
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource fontColor}" />
+    </Style>
+
     <Style TargetType="Border" x:Key="listBorderStyle">
         <Setter Property="BorderBrush" Value="{StaticResource alternateColor}" />
         <Setter Property="BorderThickness" Value="0, 0, 0, 1" />
@@ -143,5 +148,11 @@
 
     <Style TargetType="Border" BasedOn="{StaticResource listBorderStyle}" x:Key="listBorderHeaderStyle">
         <Setter Property="Margin" Value="5, 0" />
+    </Style>
+
+    <Style x:Key="dialogBottompanel" TargetType="StackPanel">
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Orientation" Value="Horizontal" />
     </Style>
 </ResourceDictionary>

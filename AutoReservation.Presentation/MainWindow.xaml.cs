@@ -64,14 +64,13 @@ namespace AutoReservation.Presentation
             }
         }
 
-        private void addElement(object sender, RoutedEventArgs e)
+        private void AddElementButton_Click(object sender, RoutedEventArgs e)
         {
-            var currentTabItem = MainControl.SelectedItem as TabItem;
+            NewAutoWindow newAutoWindow = new NewAutoWindow();
 
-            switch(currentTabItem.Header)
+            if(newAutoWindow.ShowDialog() ?? false)
             {
-                case "Autos":
-                    break;
+                AutoList.Add(newAutoWindow.Auto);
             }
         }
     }

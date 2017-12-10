@@ -4,10 +4,27 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoReservation.Presentation"
+        xmlns:common="clr-namespace:AutoReservation.Common.DataTransferObjects;assembly=AutoReservation.Common"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="NewAutoWindow" Height="300" Width="300">
+        Title="NewAutoWindow"  SizeToContent="WidthAndHeight">
     <Window.Resources>
-        <ResourceDictionary Source="Styles/mainTheme.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/mainTheme.xaml" />
+                <ResourceDictionary Source="Styles/newAutoWindowStyle.xaml" />
+
+                <ResourceDictionary>
+                    <ObjectDataProvider MethodName="GetNames"
+                                        ObjectType="{x:Type sys:Enum}"
+                                        x:Key="autoklassenDataProvider">
+                        <ObjectDataProvider.MethodParameters>
+                            <x:Type TypeName="common:AutoKlasse" />
+                        </ObjectDataProvider.MethodParameters>
+                    </ObjectDataProvider>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <Grid Style="{StaticResource mainGridStyle}">
         <Grid.ColumnDefinitions>
@@ -16,13 +33,45 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="1.5*" />
+            <RowDefinition Height="1.5*" />
+            <RowDefinition Height="1.5*" />
+            <RowDefinition Height="1.5*" />
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Text="Auto hinzufügen" />
-        <TextBlock Grid.Column="1" Text="Marke" />
+        <TextBlock Style="{StaticResource titleTextStyle}" Grid.Row="0" Grid.ColumnSpan="2" Text="Auto hinzufügen" />
+        
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="Marke" />
+        <TextBox Name="MarkeTextbox" Grid.Column="1" Grid.Row="1" Text="{Binding Marke}" />
+
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Autoklasse" />
+        <ComboBox Name="AutoklassenCombobox" Grid.Column="1" Grid.Row="2" 
+                  ItemsSource="{Binding Source={StaticResource autoklassenDataProvider}}"
+                  SelectedItem="{Binding AutoKlasse}"
+                  SelectedIndex="0"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="Basistarif" />
+        <TextBox Name="BasistarifTextbox" Grid.Column="1" Grid.Row="3" Text="{Binding Basistarif}" PreviewTextInput="BasistarifTextbox_PreviewTextInput" />
+
+        <TextBlock Grid.Column="0" Grid.Row="4" Text="Tagestarif" />
+        <TextBox Name="TagestarifTextbox" Grid.Column="1" Grid.Row="4" Text="{Binding Tagestarif}" PreviewTextInput="TagestarifTextbox_PreviewTextInput">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Setter Property="IsEnabled" Value="False" />
+                    
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=AutoklassenCombobox, Path=SelectedItem}" Value="Luxusklasse">
+                            <Setter Property="IsEnabled" Value="True" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Style="{StaticResource dialogBottompanel}">
+            <Button Name="AddAutoButton" Style="{StaticResource normalButtonStyle}" Content="Hinzufügen" Click="AddAutoButton_Click" />
+            <Button Name="Abort" Style="{StaticResource normalButtonStyle}" Content="Abbrechen" Click="Abort_Click" />
+        </StackPanel>
     </Grid>
 </Window>

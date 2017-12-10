@@ -15,7 +15,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel Style="{StaticResource contentAreaStyle}">
-        <StackPanel DockPanel.Dock="Bottom">
+        <StackPanel Style="{StaticResource dialogBottompanel}" DockPanel.Dock="Bottom">
             <Button Name="Confirm" Style="{StaticResource normalButtonStyle}" Content="OK" Click="ConfirmClick" />
             <Button Name="Abort" Style="{StaticResource normalButtonStyle}" Content="Abbrechen" Click="AbortClick" />
         </StackPanel>

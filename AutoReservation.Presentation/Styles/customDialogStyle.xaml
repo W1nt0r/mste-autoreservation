@@ -4,16 +4,10 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../Brushes/mainBrushes.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
+
     <Style TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource fontColor}" />
         <Setter Property="Margin" Value="20" />
         <Setter Property="HorizontalAlignment" Value="Center" />
-    </Style>
-    
-    <Style TargetType="StackPanel">
-        <Setter Property="Margin" Value="10" />
-        <Setter Property="HorizontalAlignment" Value="Right" />
-        <Setter Property="Orientation" Value="Horizontal" />
     </Style>
 </ResourceDictionary>
