@@ -5,12 +5,18 @@ namespace AutoReservation.Common.DataTransferObjects
 {
     public class ReservationDto
     {
+        [DataMember]
         public int ReservationsNr { get; set; }
+        [DataMember]
         public DateTime Bis { get; set; }
+        [DataMember]
         public DateTime Von { get; set; }
+        [DataMember]
         public byte[] RowVersion { get; set; }
 
+        [DataMember]
         public KundeDto Kunde { get; set; }
+        [DataMember]
         public AutoDto Auto { get; set; }
 
         //public override string ToString()
