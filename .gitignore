@@ -17,12 +17,16 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
+build/
 x64/
 x86/
 bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+
+# Roslyn cache directories
+*.ide/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -202,7 +206,10 @@ _pkginfo.txt
 !*.[Cc]ache/
 
 # Others
+sql/
+*.Cache
 ClientBin/
+[Ss]tyle[Cc]op.*
 ~$*
 *~
 *.dbmdl
@@ -210,6 +217,7 @@ ClientBin/
 *.jfm
 *.pfx
 *.publishsettings
+node_modules/
 orleans.codegen.cs
 
 # Since there are multiple workflows, uncomment next line to ignore bower_components
@@ -239,6 +247,13 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+git_stats/*
+
+*.ncrunchproject
+StyleCop.Cache
+bin
+obj
 
 # GhostDoc plugin setting file
 *.GhostDoc.xml
