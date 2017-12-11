@@ -4,6 +4,12 @@
              xmlns:local="clr-namespace:AutoReservation.Presentation"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="styles/Colors.xaml"/>
+                <ResourceDictionary Source="styles/TabControlStyles.xaml"/>
+                <ResourceDictionary Source="styles/ButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

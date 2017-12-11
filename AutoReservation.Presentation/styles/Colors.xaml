@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:AutoReservation.Presentation">
+
+    <SolidColorBrush x:Key="MainColor" Color="#304269"/>
+    <SolidColorBrush x:Key="FadedMainColor" Color="#91BED4"/>
+    <SolidColorBrush x:Key="AccentBackgroundColor" Color="#D9E8F5"/>
+    <SolidColorBrush x:Key="BackgroundColor" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AccentColor" Color="#F26101"/>
+    <SolidColorBrush x:Key="FadedAccentColor" Color="#ED8A48"/>
+    <SolidColorBrush x:Key="DarkAccentColor" Color="#D45501"/>
+</ResourceDictionary>
