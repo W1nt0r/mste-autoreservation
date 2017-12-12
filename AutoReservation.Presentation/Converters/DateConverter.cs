@@ -17,7 +17,7 @@ namespace AutoReservation.Presentation.Converters
                 DateTime myDate = (DateTime)value;
                 if (myDate != DateTime.MinValue)
                 {
-                    return myDate.ToString("0:dd.MM.yyyy");
+                    return myDate.ToString("dd.MM.yyyy");
                 }
             }
             return String.Empty;

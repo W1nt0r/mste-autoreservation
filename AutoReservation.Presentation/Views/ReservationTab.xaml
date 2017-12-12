@@ -13,7 +13,7 @@
         <DataGrid ItemsSource="{Binding Rvm.Reservationen}" AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Width="*" Header="VON"  Binding="{Binding Von, Converter={StaticResource dateConverter}}"/>
-                <DataGridTextColumn Width="*" Header="BIS" Binding="{Binding Bis, StringFormat={}{0:dd.MM.yyyy}}"/>
+                <DataGridTextColumn Width="*" Header="BIS" Binding="{Binding Bis, Converter={StaticResource dateConverter}}"/>
                 <DataGridTextColumn Width="*" Header="KUNDE VORNAME" Binding="{Binding Kunde.Vorname}"/>
                 <DataGridTextColumn Width="*" Header="KUNDE NACHNAME" Binding="{Binding Kunde.Nachname}"/>
                 <DataGridTextColumn Width="*" Header="AUTOMARKE" Binding="{Binding Auto.Marke}"/>
