@@ -1,4 +1,5 @@
 ﻿using AutoReservation.Common.DataTransferObjects;
+using AutoReservation.Presentation.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,13 +18,13 @@ namespace AutoReservation.Presentation.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         private ObservableCollection<KundeDto> _kunden;
         public ObservableCollection<KundeDto> Kunden { get { return _kunden; } set { SetProperty(ref _kunden, value); } }
-        public AddCommand AddNewKundeCommand { get; set; }
-        public RemoveCommand RemoveKundeCommand { get; set; }
+        public ICommand AddNewKundeCommand { get; set; }
+        public ICommand RemoveKundeCommand { get; set; }
 
         public KundeViewModel()
         {
-            AddNewKundeCommand = new AddCommand(this);
-            RemoveKundeCommand = new RemoveCommand(this);
+            AddNewKundeCommand = new RelayCommand<KundeDto>(param => SaveKunde(param));
+            RemoveKundeCommand = new RelayCommand<KundeDto>(param => DeleteKunde(param));
         }
 
         private bool SetProperty<T>(ref T field, T value, [CallerMemberName] string name = null)
@@ -37,55 +38,22 @@ namespace AutoReservation.Presentation.ViewModels
             return true;
         }
 
-        public class AddCommand : ICommand
+        private void SaveKunde(KundeDto kunde)
         {
-            public event EventHandler CanExecuteChanged;
-            private KundeViewModel ViewModel{get;set;}
-            public AddCommand(KundeViewModel ViewModel)
-            {
-                this.ViewModel = ViewModel;
-            }
+            KundeAddWindow kundeAddWindow = new KundeAddWindow(new KundeDto() { Geburtsdatum = DateTime.Now });
 
-            public bool CanExecute(object parameter)
+            if (kundeAddWindow.ShowDialog() ?? false)
             {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                Console.WriteLine("Entered Add Command");
-                KundeAddWindow kundeAddWindow = new KundeAddWindow(new KundeDto() { Geburtsdatum = DateTime.Now });
-                if (kundeAddWindow.ShowDialog() ?? false)
-                {
-                    ViewModel.Kunden.Add(kundeAddWindow.Kunde);
-                }
+                Kunden.Add(kundeAddWindow.Kunde);
             }
         }
 
-        public class RemoveCommand : ICommand
+        private void DeleteKunde(KundeDto kunde)
         {
-            public event EventHandler CanExecuteChanged;
-            private KundeViewModel ViewModel { get; set; }
-            public RemoveCommand(KundeViewModel ViewModel)
+            if (kunde != default(KundeDto) && MessageBox.Show("Wollen Sie diesen Eintrag wirklich löschen?", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                this.ViewModel = ViewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                Console.WriteLine("Entered RemoveCommand");
-                KundeDto kunde = (KundeDto)parameter;
-                if (kunde != default(KundeDto) && MessageBox.Show("Wollen Sie diesen Eintrag wirklich löschen?", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    ViewModel.Kunden.Remove(kunde);
-                }
+                Kunden.Remove(kunde);
             }
         }
-
     }
 }
