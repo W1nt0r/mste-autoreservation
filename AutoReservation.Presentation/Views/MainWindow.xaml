@@ -1,0 +1,36 @@
+﻿<Window x:Class="AutoReservation.Presentation.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoReservation.Presentation"
+        mc:Ignorable="d"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        ResizeMode="CanResizeWithGrip"
+        Title="MainWindow" Height="500" Width="700">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/DataGridStyles.xaml"/>
+                <ResourceDictionary Source="KundeTab.xaml"/>
+                <ResourceDictionary Source="ReservationTab.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="Label">
+                <Setter Property="Foreground" Value="{StaticResource MainColor}"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Background="{StaticResource MainColor}">
+        <TabControl Grid.RowSpan="2">
+            <TabItem Header="Autos">
+                <Label>Autos</Label>
+            </TabItem>
+            <TabItem Header="Kunden">
+                <ContentPresenter Content="{StaticResource KundeGrid}"/>
+            </TabItem>
+            <TabItem Header="Reservationen">
+                <ContentPresenter Content="{StaticResource ReservationGrid}"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

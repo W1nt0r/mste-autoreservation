@@ -8,7 +8,8 @@
         WindowStartupLocation="CenterScreen"
         FontSize="15"
         ResizeMode="NoResize"
-        Title="KundeAddWindow" Height="370" Width="500">
+        Title="KundeAddWindow" Height="370" Width="500"
+        >
     <Window.Resources>
         <ResourceDictionary>
             <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">

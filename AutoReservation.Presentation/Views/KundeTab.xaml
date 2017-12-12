@@ -1,0 +1,26 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:AutoReservation.Presentation"
+                    xmlns:viewmodels="clr-namespace:AutoReservation.Presentation.ViewModels"
+                    >
+    <DockPanel x:Key="KundeGrid"  x:Name="KundeGrid">
+        <DockPanel DockPanel.Dock="Top">
+            <Button DockPanel.Dock="Right" Name="KundeAddButton" Content="HINZUFÜGEN" Margin="10" Command="{Binding Kvm.AddNewKundeCommand}"/>
+            <Label/>
+        </DockPanel>
+        <DataGrid ItemsSource="{Binding Kvm.Kunden}" AutoGenerateColumns="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="*" Header="VORNAME" Binding="{Binding Vorname}"/>
+                <DataGridTextColumn Width="*" Header="NACHNAME" Binding="{Binding Nachname}"/>
+                <DataGridTextColumn Width="*" Header="GEBURTSDATUM" Binding="{Binding Geburtsdatum, StringFormat={}{0:dd.MM.yyyy}}" />
+                <DataGridTemplateColumn Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="LÖSCHEN" Command="{Binding Path=DataContext.Kvm.RemoveKundeCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"  CommandParameter="{Binding}" Height="30" Width="Auto" HorizontalAlignment="Stretch" FontSize="15"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</ResourceDictionary>

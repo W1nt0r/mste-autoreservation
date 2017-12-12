@@ -3,8 +3,10 @@ using System.Windows;
 using System.Windows.Input;
 using AutoReservation.Common.DataTransferObjects;
 using System.Collections.ObjectModel;
+using AutoMapper;
+using AutoReservation.Presentation.ViewModels;
 
-namespace AutoReservation.Presentation
+namespace AutoReservation.Presentation.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -12,7 +14,9 @@ namespace AutoReservation.Presentation
     public partial class MainWindow : Window
     {
 
-        public ObservableCollection<KundeDto> Kunden { get; set; }
+        public ObservableCollection<KundeViewModel> Kunden { get; set; }
+        public KundeViewModel Kvm { get; set; }
+        public ReservationViewModel Rvm { get; set; }
         private bool CloseCommand_CanExecute { get; set; }
         private bool MaximizeCommand_CanExecute { get; set; }
         private bool MinimizeCommand_CanExecute { get; set; }
@@ -25,9 +29,12 @@ namespace AutoReservation.Presentation
             MaximizeCommand_CanExecute = true;
             MinimizeCommand_CanExecute = true;
             RestoreWindowCommand_CanExecute = false;
+            Mapper.Initialize(cfg => cfg.CreateMap<KundeDto, KundeViewModel>());
+            Kvm = new KundeViewModel();
+            Rvm = new ReservationViewModel();
             DataContext = this;
 
-            Kunden = new ObservableCollection<KundeDto>
+            Kvm.Kunden = new ObservableCollection<KundeDto>
              {
                 new KundeDto {Id = 1, Nachname = "Nass", Vorname = "Anna", Geburtsdatum = new DateTime(1981, 05, 05)},
                 new KundeDto {Id = 2, Nachname = "Beil", Vorname = "Timo", Geburtsdatum = new DateTime(1980, 09, 09)},
@@ -41,9 +48,21 @@ namespace AutoReservation.Presentation
                 new KundeDto {Id = 10, Nachname = "Miamarsch", Vorname = "Alex", Geburtsdatum = new DateTime(1995, 10, 17)},
                 new KundeDto {Id = 10, Nachname = "Mann", Vorname = "Herr Herrmann", Geburtsdatum = new DateTime(1953, 12, 24)}
             };
+
+            AutoDto Car1 = new AutoDto() { Marke = "Kia", Tagestarif = 10, Basistarif = 100 };
+            AutoDto Car2 = new AutoDto() { Marke = "Peugeot", Tagestarif = 10, Basistarif = 100 };
+
+            Rvm.Reservationen = new ObservableCollection<ReservationDto>
+            {
+            new ReservationDto { Auto = Car1, Kunde = Kvm.Kunden[0], Von = DateTime.Now, Bis = DateTime.Now.AddDays(1) },
+            new ReservationDto { Auto = Car2, Kunde = Kvm.Kunden[1], Von = DateTime.Now, Bis = DateTime.Now.AddDays(2) },
+            new ReservationDto { Auto = Car1, Kunde = Kvm.Kunden[2], Von = DateTime.Now.AddDays(-3), Bis = DateTime.Now.AddDays(-2) },
+            new ReservationDto { Auto = Car1, Kunde = Kvm.Kunden[3], Von = DateTime.Now, Bis = DateTime.Now.AddDays(1) },
+            new ReservationDto { Auto = Car2, Kunde = Kvm.Kunden[4], Von = DateTime.Now, Bis = DateTime.Now.AddDays(1) }
+            };   
         }
 
-        private void KundeAddButton_Click(object sender, RoutedEventArgs e)
+        /*private void KundeAddButton_Click(object sender, RoutedEventArgs e)
         {
             KundeAddWindow kundeAddWindow = new KundeAddWindow(new KundeDto() { Geburtsdatum = DateTime.Now });
             if (kundeAddWindow.ShowDialog() ?? false)
@@ -59,6 +78,6 @@ namespace AutoReservation.Presentation
             {
                 Kunden.Remove(kunde);
             }
-        }
+        }*/
     }
 }
