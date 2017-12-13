@@ -74,7 +74,7 @@ namespace AutoReservation.BusinessLayer
                     }
                     catch (DbUpdateConcurrencyException)
                     {
-                        throw CreateOptimisticConcurrencyException(context, reservation);
+                        throw CreateOptimisticConcurrencyException(context, reservationFromList);
                     }
                 }
                 throw new EntityNotFoundException($"Could not find reservation with id {reservation.ReservationsNr}");
