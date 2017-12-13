@@ -137,16 +137,12 @@ namespace AutoReservation.Service.Wcf.Testing
             Target.AddAuto(auto);
             CallbackSpy.WaitForAnswer();
             AutoDto insertedAuto = CallbackSpy.AutoSpy.First();
-            CallbackSpy.AutoSpy.Clear();
 
-            Target.GetAllAutos();
-            CallbackSpy.WaitForAnswer();
-            var autos = CallbackSpy.AutoSpy;
 
-            AutoDto insertedAuto = CallbackSpy.AutoSpy.First();
             Assert.AreEqual(4, insertedAuto.Id);
-            
             Assert.AreEqual("Opel Corsa", insertedAuto.Marke);
+
+            CallbackSpy.AutoSpy.Clear();
         }
 
         [TestMethod]
