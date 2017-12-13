@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ServiceModel;
 using System.Collections.ObjectModel;
 using AutoReservation.Common.DataTransferObjects;
+using AutoReservation.Common.DataTransferObjects.Faults;
 
 namespace AutoReservation.Common.Interfaces
 {
@@ -31,5 +32,8 @@ namespace AutoReservation.Common.Interfaces
 
         [OperationContract(IsOneWay = true)]
         void SendAutoAvailability(bool available);
+
+        [OperationContract(IsOneWay = true)]
+        void SendFault(CommunicationFault fault);
     }
 }

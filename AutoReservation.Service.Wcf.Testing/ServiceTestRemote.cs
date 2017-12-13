@@ -32,12 +32,15 @@ namespace AutoReservation.Service.Wcf.Testing
             {
                 if (target == null)
                 {
-                    ChannelFactory<IAutoReservationService> channelFactory = new ChannelFactory<IAutoReservationService>("AutoReservationService");
+                    DuplexChannelFactory<IAutoReservationService> channelFactory 
+                        = new DuplexChannelFactory<IAutoReservationService>(new InstanceContext(CallbackSpy), "AutoReservationService");
                     target = channelFactory.CreateChannel();
                 }
                 return target;
             }
         }
 
+        private AutoReservationResultCallbackSpy callbackSpy;
+        protected override AutoReservationResultCallbackSpy CallbackSpy => callbackSpy ?? (callbackSpy = new AutoReservationResultCallbackSpy());
     }
 }

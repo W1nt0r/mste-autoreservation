@@ -78,6 +78,7 @@
     <Compile Include="DataTransferObjects\AutoDto.cs" />
     <Compile Include="DataTransferObjects\AutoKlasse.cs" />
     <Compile Include="DataTransferObjects\Faults\AutoUnavailableFault.cs" />
+    <Compile Include="DataTransferObjects\Faults\CommunicationFault.cs" />
     <Compile Include="DataTransferObjects\Faults\DatabaseChangeFault.cs" />
     <Compile Include="DataTransferObjects\Faults\EntityNotFoundFault.cs" />
     <Compile Include="DataTransferObjects\Faults\InvalidDateRangeFault.cs" />

@@ -7,6 +7,8 @@ namespace AutoReservation.Service.Wcf.Testing
     public class ServiceTestLocal : ServiceTestBase
     {
         private IAutoReservationService target;
-        protected override IAutoReservationService Target => target ?? (target = new AutoReservationService());
+        private AutoReservationResultCallbackSpy callbackSpy;
+        protected override AutoReservationResultCallbackSpy CallbackSpy => callbackSpy ?? (callbackSpy = new AutoReservationResultCallbackSpy());
+        protected override IAutoReservationService Target => target ?? (target = new AutoReservationService(() => CallbackSpy));
     }
 }

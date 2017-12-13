@@ -15,32 +15,41 @@ namespace AutoReservation.Service.Wcf
         private AutoManager autoManager;
         private KundeManager kundeManager;
         private ReservationManager reservationManager;
+        private readonly Func<IAutoReservationResultCallback> _createCallbackChannel;
 
         private static void WriteActualMethod()
             => Console.WriteLine($"Calling: {new StackTrace().GetFrame(1).GetMethod().Name}");
 
-        public AutoReservationService()
+        public AutoReservationService() : this(() => OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>())
+        {
+            
+        }
+
+        public AutoReservationService(Func<IAutoReservationResultCallback> callbackCreator)
         {
             autoManager = new AutoManager();
             kundeManager = new KundeManager();
             reservationManager = new ReservationManager();
+
+            _createCallbackChannel = callbackCreator;
         }
 
         public void AddAuto(AutoDto auto)
         {
             WriteActualMethod();
+            IAutoReservationResultCallback cb = _createCallbackChannel();
             try
             {
                 Auto insertedAuto = autoManager.Insert(auto.ConvertToEntity());
-                IAutoReservationResultCallback cb = OperationContext.Current.GetCallbackChannel<IAutoReservationResultCallback>();
                 cb.SendAuto(insertedAuto.ConvertToDto());
             }
             catch (DatabaseChangeException ex)
             {
-                throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
+                /*throw new FaultException<DatabaseChangeFault>(new DatabaseChangeFault
                 {
                     Message = ex.Message
-                });
+                });*/
+                cb.SendFault(new CommunicationFault { Exception = ex });
             }
         }
 

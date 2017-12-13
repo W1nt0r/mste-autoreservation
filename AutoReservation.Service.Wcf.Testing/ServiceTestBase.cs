@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using AutoReservation.Common.DataTransferObjects.Faults;
+using System.Threading;
 
 namespace AutoReservation.Service.Wcf.Testing
 {
@@ -14,6 +15,7 @@ namespace AutoReservation.Service.Wcf.Testing
     public abstract class ServiceTestBase
     {
         protected abstract IAutoReservationService Target { get; }
+        protected abstract AutoReservationResultCallbackSpy CallbackSpy { get; }
 
         [TestInitialize]
         public void InitializeTestData()
@@ -92,7 +94,15 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void InsertAutoTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            AutoDto auto = new AutoDto { Marke = "Opel Corsa", Tagestarif = 100, AutoKlasse = AutoKlasse.Mittelklasse };
+            Target.AddAuto(auto);
+
+            CallbackSpy.WaitForAnswer();
+
+            AutoDto insertedAuto = CallbackSpy.AutoSpy.First();
+            Assert.AreEqual(4, insertedAuto.Id);
+            
+            Assert.AreEqual("Opel Corsa", insertedAuto.Marke);
         }
 
         [TestMethod]

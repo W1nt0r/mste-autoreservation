@@ -76,6 +76,7 @@
     <Compile Include="..\Assets\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="AutoReservationResultCallbackSpy.cs" />
     <Compile Include="ServiceTestLocal.cs" />
     <Compile Include="ServiceTestRemote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
