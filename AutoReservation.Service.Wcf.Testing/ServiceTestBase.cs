@@ -383,25 +383,86 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void InsertReservationWithInvalidDateRangeTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetAuto(1);
+            CallbackSpy.WaitForAnswer();
+            AutoDto auto = CallbackSpy.AutoSpy.First();
+            CallbackSpy.AutoSpy.Clear();
+
+            Target.GetKunde(1);
+            CallbackSpy.WaitForAnswer();
+            KundeDto kunde = CallbackSpy.KundeSpy.First();
+            CallbackSpy.KundeSpy.Clear();
+
+            ReservationDto reservation = new ReservationDto { Auto = auto, Bis = DateTime.Now.AddSeconds(1), Von = DateTime.Now, Kunde = kunde, ReservationsNr = 9999 };
+            Target.AddReservation(reservation);
+            CallbackSpy.WaitForAnswer();
+            string ex = CallbackSpy.ExceptionSpy;
+
+            Assert.AreEqual("Reservation must be at 24 hours long", ex);
+
+            CallbackSpy.ExceptionSpy = null;
         }
 
         [TestMethod]
         public void InsertReservationWithAutoNotAvailableTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetReservation(2);
+            CallbackSpy.WaitForAnswer();
+            ReservationDto reservationFound = CallbackSpy.ReservationSpy.First();
+
+            CallbackSpy.ReservationSpy.Clear();
+
+            ReservationDto reservation = new ReservationDto { Auto = reservationFound.Auto, Kunde = reservationFound.Kunde, Von = reservationFound.Von, Bis = reservationFound.Bis };
+
+            Target.AddReservation(reservation);
+            CallbackSpy.WaitForAnswer();
+            string ex = CallbackSpy.ExceptionSpy;
+
+            Assert.AreEqual("auto already reserved in this range", ex);
+
+            CallbackSpy.ExceptionSpy = null;
         }
 
         [TestMethod]
         public void UpdateReservationWithInvalidDateRangeTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetReservation(1);
+            CallbackSpy.WaitForAnswer();
+            ReservationDto reservation = CallbackSpy.ReservationSpy.First();
+            CallbackSpy.ReservationSpy.Clear();
+
+            reservation.Von = reservation.Bis;
+            Target.UpdateReservation(reservation);
+            CallbackSpy.WaitForAnswer();
+            string ex = CallbackSpy.ExceptionSpy;
+
+            Assert.AreEqual("Reservation must be at 24 hours long", ex);
+
+            CallbackSpy.ExceptionSpy = null;
         }
 
         [TestMethod]
         public void UpdateReservationWithAutoNotAvailableTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetReservation(2);
+            CallbackSpy.WaitForAnswer();
+            ReservationDto reservation = CallbackSpy.ReservationSpy.First();
+            CallbackSpy.ReservationSpy.Clear();
+
+            Target.GetAuto(3);
+            CallbackSpy.WaitForAnswer();
+            AutoDto auto = CallbackSpy.AutoSpy.First();
+            CallbackSpy.AutoSpy.Clear();
+
+            reservation.Auto = auto;
+
+            Target.UpdateReservation(reservation);
+            CallbackSpy.WaitForAnswer();
+            string ex = CallbackSpy.ExceptionSpy;
+
+            Assert.AreEqual("auto already reserved in this range", ex);
+
+            CallbackSpy.ExceptionSpy = null;
         }
 
         #endregion
