@@ -17,6 +17,7 @@ namespace AutoReservation.Service.Wcf.Testing
         public List<KundeDto> KundeSpy { get; set; }
         public List<ReservationDto> ReservationSpy { get; set; }
         public bool? IsAvailable { get; set; }
+        public string ExceptionSpy { get; set; }
 
         private bool _answered;
 
@@ -88,7 +89,7 @@ namespace AutoReservation.Service.Wcf.Testing
         {
             WriteActualMethod();
             _answered = true;
-            throw fault.Exception;
+            ExceptionSpy = fault.Exception;
         }
 
         public void WaitForAnswer()

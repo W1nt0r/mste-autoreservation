@@ -45,7 +45,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (DatabaseChangeException ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -60,7 +60,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (DatabaseChangeException ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -75,7 +75,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (Exception ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -110,7 +110,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (EntityNotFoundException ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -124,7 +124,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (EntityNotFoundException ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -138,7 +138,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (EntityNotFoundException ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -160,7 +160,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch(Exception ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -174,7 +174,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (Exception ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -188,7 +188,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (Exception ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -202,7 +202,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (Exception ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -216,7 +216,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (Exception ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
 
@@ -230,7 +230,7 @@ namespace AutoReservation.Service.Wcf
             }
             catch (Exception ex)
             {
-                cb.SendFault(new CommunicationFault { Exception = ex });
+                cb.SendFault(new CommunicationFault { Exception = ex.Message });
             }
         }
     }

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AutoReservation.Common.DataTransferObjects.Faults
 {
+    [DataContract]
     public class CommunicationFault
     {
-        public Exception Exception { get; set; }
+        [DataMember]
+        public string Exception { get; set; }
     }
 }
