@@ -25,6 +25,7 @@ namespace AutoReservation.Service.Wcf.Testing
 
         public AutoReservationResultCallbackSpy()
         {
+            WriteActualMethod();
             AutoSpy = new List<AutoDto>();
             KundeSpy = new List<KundeDto>();
             ReservationSpy = new List<ReservationDto>();
@@ -47,7 +48,9 @@ namespace AutoReservation.Service.Wcf.Testing
 
         public void SendAllReservationen(List<ReservationDto> reservationen)
         {
+            WriteActualMethod();
             ReservationSpy = reservationen;
+            _answered = true;
         }
 
         public void SendAuto(AutoDto auto)
@@ -62,23 +65,29 @@ namespace AutoReservation.Service.Wcf.Testing
 
         public void SendAutoAvailability(bool available)
         {
+            WriteActualMethod();
             IsAvailable = available;
             _answered = true;
         }
 
         public void SendKunde(KundeDto kunde)
         {
+            WriteActualMethod();
             KundeSpy.Add(kunde);
+            _answered = true;
         }
 
         public void SendReservation(ReservationDto reservation)
         {
+            WriteActualMethod();
             ReservationSpy.Add(reservation);
+            _answered = true;
         }
 
         public void SendFault(CommunicationFault fault)
         {
             WriteActualMethod();
+            _answered = true;
             throw fault.Exception;
         }
 
