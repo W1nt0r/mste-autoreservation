@@ -63,9 +63,22 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="ViewModels\AutoDetailViewModel.cs" />
+    <Compile Include="ViewModels\AutoViewModel.cs" />
+    <Compile Include="Views\AutoAddWindow.xaml.cs">
+      <DependentUpon>AutoAddWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ReservationAddWindow.xaml.cs">
       <DependentUpon>ReservationAddWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\AutoAddWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AutoTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\KundeAddWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -14,9 +14,10 @@ namespace AutoReservation.Presentation.Views
     public partial class MainWindow : Window
     {
 
-        public ObservableCollection<KundeViewModel> Kunden { get; set; }
+        //public ObservableCollection<KundeViewModel> Kunden { get; set; }
         public KundeViewModel Kvm { get; set; }
         public ReservationViewModel Rvm { get; set; }
+        public AutoViewModel Avm { get; set; }
         private bool CloseCommand_CanExecute { get; set; }
         private bool MaximizeCommand_CanExecute { get; set; }
         private bool MinimizeCommand_CanExecute { get; set; }
@@ -32,6 +33,7 @@ namespace AutoReservation.Presentation.Views
             Mapper.Initialize(cfg => cfg.CreateMap<KundeDto, KundeViewModel>());
             Kvm = new KundeViewModel();
             Rvm = new ReservationViewModel();
+            Avm = new AutoViewModel();
             DataContext = this;
 
             Kvm.Kunden = new ObservableCollection<KundeDto>
@@ -59,7 +61,16 @@ namespace AutoReservation.Presentation.Views
             new ReservationDto { Auto = Car1, Kunde = Kvm.Kunden[2], Von = DateTime.Now.AddDays(-3), Bis = DateTime.Now.AddDays(-2) },
             new ReservationDto { Auto = Car1, Kunde = Kvm.Kunden[3], Von = DateTime.Now, Bis = DateTime.Now.AddDays(1) },
             new ReservationDto { Auto = Car2, Kunde = Kvm.Kunden[4], Von = DateTime.Now, Bis = DateTime.Now.AddDays(1) }
-            };   
+            }; 
+            
+            Avm.Autos = new ObservableCollection<AutoDto>() {
+                new AutoDto { AutoKlasse = AutoKlasse.Luxusklasse, Marke = "Mercedes", Tagestarif = 212, Basistarif = 2323 },
+                new AutoDto { AutoKlasse = AutoKlasse.Luxusklasse, Marke = "BMW", Tagestarif = 266, Basistarif = 2454 },
+                new AutoDto { AutoKlasse = AutoKlasse.Luxusklasse, Marke = "Tesla", Tagestarif = 100, Basistarif = 9233 },
+                new AutoDto { AutoKlasse = AutoKlasse.Standard, Marke = "Opel", Tagestarif = 560 },
+                new AutoDto { AutoKlasse = AutoKlasse.Mittelklasse, Marke = "Renault", Tagestarif = 700 },
+                new AutoDto { AutoKlasse = AutoKlasse.Standard, Marke = "Dacia", Tagestarif = 450 }
+            };
         }
 
         /*private void KundeAddButton_Click(object sender, RoutedEventArgs e)

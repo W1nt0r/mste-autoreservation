@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="../Styles/DataGridStyles.xaml"/>
                 <ResourceDictionary Source="KundeTab.xaml"/>
                 <ResourceDictionary Source="ReservationTab.xaml"/>
+                <ResourceDictionary Source="AutoTab.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="Label">
                 <Setter Property="Foreground" Value="{StaticResource MainColor}"/>
@@ -23,7 +24,7 @@
     <Grid Background="{StaticResource MainColor}">
         <TabControl Grid.RowSpan="2">
             <TabItem Header="Autos">
-                <Label>Autos</Label>
+                <ContentPresenter Content="{StaticResource AutoGrid}"/>
             </TabItem>
             <TabItem Header="Kunden">
                 <ContentPresenter Content="{StaticResource KundeGrid}"/>
