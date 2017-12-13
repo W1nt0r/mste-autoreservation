@@ -109,21 +109,33 @@ namespace AutoReservation.Service.Wcf.Testing
         #region Get by not existing ID
 
         [TestMethod]
-        [ExpectedException(typeof(EntityNotFoundException))]
         public void GetAutoByIdWithIllegalIdTest()
         {
+            Target.GetAuto(10);
+            CallbackSpy.WaitForAnswer();
+            string ex = CallbackSpy.ExceptionSpy;
+            CallbackSpy.ExceptionSpy = null;
+            Assert.AreEqual($"Could not find auto with id 10", ex);
         }
 
         [TestMethod]
         public void GetKundeByIdWithIllegalIdTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetKunde(10);
+            CallbackSpy.WaitForAnswer();
+            string ex = CallbackSpy.ExceptionSpy;
+            CallbackSpy.ExceptionSpy = null;
+            Assert.AreEqual($"Could not find kunde with id 10", ex);
         }
 
         [TestMethod]
         public void GetReservationByNrWithIllegalIdTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetReservation(10);
+            CallbackSpy.WaitForAnswer();
+            string ex = CallbackSpy.ExceptionSpy;
+            CallbackSpy.ExceptionSpy = null;
+            Assert.AreEqual($"Could not find reservation with id 10", ex);
         }
 
         #endregion
@@ -137,7 +149,6 @@ namespace AutoReservation.Service.Wcf.Testing
             Target.AddAuto(auto);
             CallbackSpy.WaitForAnswer();
             AutoDto insertedAuto = CallbackSpy.AutoSpy.First();
-
 
             Assert.AreEqual(4, insertedAuto.Id);
             Assert.AreEqual("Opel Corsa", insertedAuto.Marke);
@@ -193,10 +204,10 @@ namespace AutoReservation.Service.Wcf.Testing
         {
             Target.GetAuto(1);
             CallbackSpy.WaitForAnswer();
-            AutoDto insertedAuto = CallbackSpy.AutoSpy.First();
+            AutoDto auto = CallbackSpy.AutoSpy.First();
             CallbackSpy.AutoSpy.Clear();
 
-            Target.RemoveAuto(insertedAuto);
+            Target.RemoveAuto(auto);
             CallbackSpy.WaitForAnswer();
             AutoDto deletedAuto = CallbackSpy.AutoSpy.First();
             CallbackSpy.AutoSpy.Clear();
@@ -232,7 +243,21 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void DeleteReservationTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetReservation(1);
+            CallbackSpy.WaitForAnswer();
+            ReservationDto res = CallbackSpy.ReservationSpy.First();
+            CallbackSpy.ReservationSpy.Clear();
+
+            Target.RemoveReservation(res);
+            CallbackSpy.WaitForAnswer();
+            ReservationDto deletedRes = CallbackSpy.ReservationSpy.First();
+            CallbackSpy.ReservationSpy.Clear();
+
+            Target.GetAllReservationen();
+            CallbackSpy.WaitForAnswer();
+            var reservationen = CallbackSpy.ReservationSpy;
+            Assert.IsFalse(reservationen.Contains(deletedRes));
+            CallbackSpy.ReservationSpy.Clear();
         }
 
         #endregion
@@ -308,19 +333,47 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void UpdateAutoWithOptimisticConcurrencyTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            AutoDto auto = new AutoDto { Id = 3, Marke = "Tesla", Tagestarif = 320, Basistarif = 10 };
+            Target.UpdateAuto(auto);
+            CallbackSpy.WaitForAnswer();
+            string ex = CallbackSpy.ExceptionSpy;
+            CallbackSpy.ExceptionSpy = null;
+            Assert.AreEqual(ex, $"Update Auto: Concurrency-Fehler");
         }
 
         [TestMethod]
         public void UpdateKundeWithOptimisticConcurrencyTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            KundeDto kunde = new KundeDto { Id = 4, Nachname = "Später", Vorname = "Peter", Geburtsdatum = new DateTime(1976, 03, 27) };
+            Target.UpdateKunde(kunde);
+            CallbackSpy.WaitForAnswer();
+            string ex = CallbackSpy.ExceptionSpy;
+            CallbackSpy.ExceptionSpy = null;
+            Assert.AreEqual(ex, $"Update Kunde: Concurrency-Fehler");
         }
 
         [TestMethod]
         public void UpdateReservationWithOptimisticConcurrencyTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetReservation(1);
+            CallbackSpy.WaitForAnswer();
+            ReservationDto res = CallbackSpy.ReservationSpy.First();
+            CallbackSpy.ReservationSpy.Clear();
+
+            res.Bis = res.Bis.AddHours(1);
+
+            Target.UpdateReservation(res);
+            CallbackSpy.WaitForAnswer();
+            ReservationDto resNew = CallbackSpy.ReservationSpy.First();
+            CallbackSpy.ReservationSpy.Clear();
+
+            resNew.Bis = resNew.Bis.AddHours(1);
+            resNew.RowVersion = res.RowVersion;
+            Target.UpdateReservation(resNew);
+            CallbackSpy.WaitForAnswer();
+            string ex = CallbackSpy.ExceptionSpy;
+            CallbackSpy.ExceptionSpy = null;
+            Assert.AreEqual(ex, "Update Reservation: Concurrency-Fehler");
         }
 
         #endregion
@@ -383,7 +436,30 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void CheckAvailabilityIsFalseTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetAuto(1);
+            CallbackSpy.WaitForAnswer();
+            AutoDto auto = CallbackSpy.AutoSpy.First();
+
+            Target.GetKunde(2);
+            CallbackSpy.WaitForAnswer();
+            KundeDto kunde = CallbackSpy.KundeSpy.First();
+
+            CallbackSpy.AutoSpy.Clear();
+            CallbackSpy.KundeSpy.Clear();
+
+            Target.GetReservation(1);
+            CallbackSpy.WaitForAnswer();
+            ReservationDto reservation = CallbackSpy.ReservationSpy.First();
+            CallbackSpy.ReservationSpy.Clear();
+
+            ReservationDto newRes = new ReservationDto { Auto = auto, Kunde = kunde, Von = reservation.Von, Bis = reservation.Bis };
+
+            Target.IsAutoAvailable(newRes);
+            CallbackSpy.WaitForAnswer();
+            bool? isAvailable = CallbackSpy.IsAvailable;
+
+            Assert.IsFalse(isAvailable ?? true);
+            CallbackSpy.IsAvailable = null;
         }
 
         #endregion
