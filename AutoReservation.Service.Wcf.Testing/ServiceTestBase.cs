@@ -34,7 +34,14 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void GetKundenTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetAllKunden();
+
+            CallbackSpy.WaitForAnswer();
+            List<KundeDto> allKunden = CallbackSpy.KundeSpy;
+
+            Assert.AreEqual(4, allKunden.Count());
+
+            CallbackSpy.KundeSpy.Clear();
         }
 
         [TestMethod]
@@ -56,7 +63,17 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void GetKundeByIdTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            int targetId = 1;
+
+            Target.GetKunde(targetId);
+
+            CallbackSpy.WaitForAnswer();
+            KundeDto foundKunde = CallbackSpy.KundeSpy.First();
+
+            Assert.AreEqual(1, foundKunde.Id);
+            Assert.AreEqual("Nass", foundKunde.Nachname);
+
+            CallbackSpy.KundeSpy.Clear();
         }
 
         [TestMethod]
@@ -100,15 +117,27 @@ namespace AutoReservation.Service.Wcf.Testing
             CallbackSpy.WaitForAnswer();
 
             AutoDto insertedAuto = CallbackSpy.AutoSpy.First();
+
             Assert.AreEqual(4, insertedAuto.Id);
-            
             Assert.AreEqual("Opel Corsa", insertedAuto.Marke);
+
+            CallbackSpy.AutoSpy.Clear();
         }
 
         [TestMethod]
         public void InsertKundeTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            KundeDto kunde = new KundeDto { Nachname = "Später", Vorname = "Peter", Geburtsdatum = new DateTime(1976, 03, 27) };
+            Target.AddKunde(kunde);
+
+            CallbackSpy.WaitForAnswer();
+
+            KundeDto insertedKunde = CallbackSpy.KundeSpy.First();
+
+            Assert.AreEqual(5, insertedKunde.Id);
+            Assert.AreEqual("Später", insertedKunde.Nachname);
+
+            CallbackSpy.KundeSpy.Clear();
         }
 
         [TestMethod]
@@ -130,7 +159,22 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void DeleteKundeTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetKunde(2);
+
+            CallbackSpy.WaitForAnswer();
+            KundeDto kundeToRemove = CallbackSpy.KundeSpy.First();
+            CallbackSpy.KundeSpy.Clear();
+
+            Target.RemoveKunde(kundeToRemove);
+            CallbackSpy.WaitForAnswer();
+            KundeDto removedKunde = CallbackSpy.KundeSpy.First();
+
+            Assert.AreEqual(kundeToRemove.Id, removedKunde.Id);
+            Assert.AreEqual(kundeToRemove.Nachname, removedKunde.Nachname);
+            Assert.AreEqual(kundeToRemove.Vorname, removedKunde.Vorname);
+            Assert.AreEqual(kundeToRemove.Geburtsdatum, removedKunde.Geburtsdatum);
+
+            CallbackSpy.KundeSpy.Clear();
         }
 
         [TestMethod]
@@ -152,7 +196,21 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void UpdateKundeTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetKunde(1);
+
+            CallbackSpy.WaitForAnswer();
+            KundeDto kundeToUpdate = CallbackSpy.KundeSpy.First();
+            CallbackSpy.KundeSpy.Clear();
+
+            kundeToUpdate.Nachname = "Bholika";
+            Target.UpdateKunde(kundeToUpdate);
+            CallbackSpy.WaitForAnswer();
+            KundeDto updatedKunde = CallbackSpy.KundeSpy.First();
+
+            Assert.AreEqual(kundeToUpdate.Id, updatedKunde.Id);
+            Assert.AreEqual("Bholika", updatedKunde.Nachname);
+
+            CallbackSpy.KundeSpy.Clear();
         }
 
         [TestMethod]
@@ -218,7 +276,26 @@ namespace AutoReservation.Service.Wcf.Testing
         [TestMethod]
         public void CheckAvailabilityIsTrueTest()
         {
-            Assert.Inconclusive("Test not implemented.");
+            Target.GetAuto(2);
+            CallbackSpy.WaitForAnswer();
+            AutoDto auto = CallbackSpy.AutoSpy.First();
+
+            Target.GetKunde(3);
+            CallbackSpy.WaitForAnswer();
+            KundeDto kunde = CallbackSpy.KundeSpy.First();
+
+            CallbackSpy.AutoSpy.Clear();
+            CallbackSpy.KundeSpy.Clear();
+
+            ReservationDto reservation = new ReservationDto { Auto = auto, Kunde = kunde, Von = new DateTime(2017, 11, 28), Bis = new DateTime(2018, 01, 01) };
+
+            Target.IsAutoAvailable(reservation);
+            CallbackSpy.WaitForAnswer();
+            bool? isAvailable = CallbackSpy.IsAvailable;
+
+            Assert.IsTrue(isAvailable ?? false);
+
+            CallbackSpy.IsAvailable = null;
         }
 
         [TestMethod]
