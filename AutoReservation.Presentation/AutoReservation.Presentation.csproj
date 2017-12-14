@@ -38,17 +38,10 @@
     <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
       <HintPath>..\packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
@@ -70,12 +63,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Converters\ObjectToTypeConverter.cs" />
-    <Compile Include="Delegates\DialogResultDelegate.cs" />
-    <Compile Include="Interfaces\IMessageDisplayer.cs" />
-    <Compile Include="Services\MessageBoxDisplayer.cs" />
+    <Compile Include="Converters\StringToVisibilityConverter.cs" />
     <Compile Include="ViewModels\AutoDetailViewModel.cs" />
     <Compile Include="ViewModels\AutoViewModel.cs" />
+    <Compile Include="ViewModels\BindableBase.cs" />
+    <Compile Include="ViewModels\KundeDetailViewModel.cs" />
     <Compile Include="Views\AutoAddWindow.xaml.cs">
       <DependentUpon>AutoAddWindow.xaml</DependentUpon>
     </Compile>
@@ -83,8 +75,8 @@
       <DependentUpon>ReservationAddWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Styles\DetailViewStyles.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\AutoAddWindow.xaml">
       <SubType>Designer</SubType>
@@ -163,10 +155,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="..\Assets\App.config">
-      <Link>App.config</Link>
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -174,19 +162,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AutoReservation.BusinessLayer\AutoReservation.BusinessLayer.csproj">
-      <Project>{1f53d0ef-0521-4155-835c-c2a04d9fe5de}</Project>
-      <Name>AutoReservation.BusinessLayer</Name>
-    </ProjectReference>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\AutoReservation.Common\AutoReservation.Common.csproj">
       <Project>{22972439-3fff-41d2-b5ae-6c06abc66eb4}</Project>
       <Name>AutoReservation.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AutoReservation.Dal\AutoReservation.Dal.csproj">
-      <Project>{ab98ac63-032f-4050-9755-1e2235e9f1dd}</Project>
-      <Name>AutoReservation.Dal</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\error-symbol.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\car-icon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

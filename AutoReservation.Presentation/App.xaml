@@ -5,6 +5,7 @@
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <BitmapImage UriSource="/Images/car-icon.png" x:Key="Icon"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/Colors.xaml"/>
                 <ResourceDictionary Source="Styles/TabControlStyles.xaml"/>
