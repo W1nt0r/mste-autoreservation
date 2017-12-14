@@ -5,6 +5,7 @@ using AutoReservation.Common.DataTransferObjects;
 using System.Collections.ObjectModel;
 using AutoMapper;
 using AutoReservation.Presentation.ViewModels;
+using AutoReservation.Dal.Entities;
 
 namespace AutoReservation.Presentation.Views
 {
@@ -13,24 +14,14 @@ namespace AutoReservation.Presentation.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        //public ObservableCollection<KundeViewModel> Kunden { get; set; }
         public KundeViewModel Kvm { get; set; }
         public ReservationViewModel Rvm { get; set; }
         public AutoViewModel Avm { get; set; }
-        private bool CloseCommand_CanExecute { get; set; }
-        private bool MaximizeCommand_CanExecute { get; set; }
-        private bool MinimizeCommand_CanExecute { get; set; }
-        private bool RestoreWindowCommand_CanExecute { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-            CloseCommand_CanExecute = true;
-            MaximizeCommand_CanExecute = true;
-            MinimizeCommand_CanExecute = true;
-            RestoreWindowCommand_CanExecute = false;
-            Mapper.Initialize(cfg => cfg.CreateMap<KundeDto, KundeViewModel>());
+
             Kvm = new KundeViewModel();
             Rvm = new ReservationViewModel();
             Avm = new AutoViewModel();
@@ -61,34 +52,35 @@ namespace AutoReservation.Presentation.Views
             new ReservationDto { Auto = Car1, Kunde = Kvm.Kunden[2], Von = DateTime.Now.AddDays(-3), Bis = DateTime.Now.AddDays(-2) },
             new ReservationDto { Auto = Car1, Kunde = Kvm.Kunden[3], Von = DateTime.Now, Bis = DateTime.Now.AddDays(1) },
             new ReservationDto { Auto = Car2, Kunde = Kvm.Kunden[4], Von = DateTime.Now, Bis = DateTime.Now.AddDays(1) }
-            }; 
-            
-            Avm.Autos = new ObservableCollection<AutoDto>() {
+            };
+
+            /*Avm.Autos = new ObservableCollection<AutoDto>() {
                 new AutoDto { AutoKlasse = AutoKlasse.Luxusklasse, Marke = "Mercedes", Tagestarif = 212, Basistarif = 2323 },
                 new AutoDto { AutoKlasse = AutoKlasse.Luxusklasse, Marke = "BMW", Tagestarif = 266, Basistarif = 2454 },
                 new AutoDto { AutoKlasse = AutoKlasse.Luxusklasse, Marke = "Tesla", Tagestarif = 100, Basistarif = 9233 },
                 new AutoDto { AutoKlasse = AutoKlasse.Standard, Marke = "Opel", Tagestarif = 560 },
                 new AutoDto { AutoKlasse = AutoKlasse.Mittelklasse, Marke = "Renault", Tagestarif = 700 },
                 new AutoDto { AutoKlasse = AutoKlasse.Standard, Marke = "Dacia", Tagestarif = 450 }
-            };
+            };*/
+            /*Avm.Autos = new ObservableCollection<Auto>()
+            {
+                new LuxusklasseAuto {Marke = "Mercedes", Tagestarif = 212, Basistarif = 2323},
+                new LuxusklasseAuto {Marke = "BMW", Tagestarif = 266, Basistarif = 2454 },
+                new StandardAuto {Marke = "Opel", Tagestarif = 560},
+                new MittelklasseAuto {Marke = "Renault", Tagestarif = 700}
+            };*/
+            
         }
 
-        /*private void KundeAddButton_Click(object sender, RoutedEventArgs e)
+        private void AutoReservationTabControl_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            KundeAddWindow kundeAddWindow = new KundeAddWindow(new KundeDto() { Geburtsdatum = DateTime.Now });
-            if (kundeAddWindow.ShowDialog() ?? false)
+            if(e.OriginalSource == AutoReservationTabControl)
             {
-                Kunden.Add(kundeAddWindow.Kunde);
+                if(AutoReservationTabControl.SelectedIndex == 0)
+                {
+                    Avm.LoadAutoData();
+                }
             }
         }
-
-        private void DeleteRow_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            KundeDto kunde = (KundeDto)e.Parameter;
-            if (kunde != default(KundeDto) && MessageBox.Show("Wollen Sie diesen Eintrag wirklich löschen?", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                Kunden.Remove(kunde);
-            }
-        }*/
     }
 }

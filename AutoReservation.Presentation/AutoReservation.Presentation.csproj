@@ -70,12 +70,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Converters\ObjectToTypeConverter.cs" />
     <Compile Include="Converters\StringToVisibilityConverter.cs" />
+    <Compile Include="Delegates\DialogResultDelegate.cs" />
+    <Compile Include="Interfaces\IMessageDisplayer.cs" />
+    <Compile Include="Services\MessageBoxDisplayer.cs" />
     <Compile Include="ViewModels\AutoDetailViewModel.cs" />
     <Compile Include="ViewModels\AutoViewModel.cs" />
     <Compile Include="ViewModels\BindableBase.cs" />
     <Compile Include="ViewModels\KundeDetailViewModel.cs" />
-    <Compile Include="ViewModels\ReservationDetailViewModel.cs" />
     <Compile Include="Views\AutoAddWindow.xaml.cs">
       <DependentUpon>AutoAddWindow.xaml</DependentUpon>
     </Compile>
@@ -165,6 +168,7 @@
     </EmbeddedResource>
     <None Include="..\Assets\App.config">
       <Link>App.config</Link>
+      <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -184,10 +188,6 @@
     <ProjectReference Include="..\AutoReservation.Dal\AutoReservation.Dal.csproj">
       <Project>{ab98ac63-032f-4050-9755-1e2235e9f1dd}</Project>
       <Name>AutoReservation.Dal</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AutoReservation.Service.Wcf\AutoReservation.Service.Wcf.csproj">
-      <Project>{73f6e950-15a9-460d-993b-dfe469a9e286}</Project>
-      <Name>AutoReservation.Service.Wcf</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

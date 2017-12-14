@@ -22,7 +22,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid Background="{StaticResource MainColor}">
-        <TabControl Grid.RowSpan="2">
+        <TabControl Name="AutoReservationTabControl" Grid.RowSpan="2" SelectionChanged="AutoReservationTabControl_SelectionChanged">
             <TabItem Header="Autos">
                 <ContentPresenter Content="{StaticResource AutoGrid}"/>
             </TabItem>

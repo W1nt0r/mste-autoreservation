@@ -1,5 +1,10 @@
-﻿using AutoReservation.Common.DataTransferObjects;
+﻿using AutoReservation.BusinessLayer;
+using AutoReservation.Common.DataTransferObjects;
+using AutoReservation.Dal.Entities;
 using AutoReservation.Presentation.Commands;
+using AutoReservation.Presentation.Delegates;
+using AutoReservation.Presentation.Interfaces;
+using AutoReservation.Presentation.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,22 +20,42 @@ namespace AutoReservation.Presentation.ViewModels
     public class AutoDetailViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private AutoDto _auto;
-        public AutoDto Auto { get { return _auto; } set { SetProperty(ref _auto, value); } }
+        public event Result DialogResult;
+        private Auto _auto;
+        public Auto Auto { get { return _auto; } set { SetProperty(ref _auto, value); } }
         private string _markeString;
         public string MarkeString { get { return _markeString; } set { SetProperty(ref _markeString, value); } }
         private string _basistarifString;
         public string BasistarifString { get { return _basistarifString; } set { SetProperty(ref _basistarifString, value); } }
         private string _tagestarifString;
         public string TagestarifString { get { return _tagestarifString; } set { SetProperty(ref _tagestarifString, value); } }
+        private AutoKlasse _autoKlasse;
+        public AutoKlasse AutoKlasse {
+            get { return _autoKlasse; }
+            set {
+                ChangeAutoType(value);
+                SetProperty(ref _autoKlasse, value);
+            }
+        }
+
+        private AutoManager autoManager;
+        private IMessageDisplayer displayer;
+
         public ICommand SaveAutoCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
-        public AutoDetailViewModel()
+        public AutoDetailViewModel() : this(new MessageBoxDisplayer())
         {
-            Auto = new AutoDto();
+            
+        }
+
+        public AutoDetailViewModel(IMessageDisplayer displayer)
+        {
+            ChangeAutoType(AutoKlasse);
             SaveAutoCommand = new RelayCommand<Window>(param => SaveAuto(param));
             CancelCommand = new RelayCommand<Window>(param => Cancel(param));
+            autoManager = new AutoManager();
+            this.displayer = displayer;
         }
 
         private bool SetProperty<T>(ref T field, T value, [CallerMemberName] string name = null)
@@ -52,18 +77,41 @@ namespace AutoReservation.Presentation.ViewModels
             {
                 Auto.Marke = MarkeString;
                 Auto.Tagestarif = int.Parse(TagestarifString);
-                Auto.Basistarif = int.Parse(BasistarifString);
+                //Auto.Basistarif = int.Parse(BasistarifString);
+                if(Auto is LuxusklasseAuto)
+                {
+                    ((LuxusklasseAuto)Auto).Basistarif = int.Parse(BasistarifString);
+                }
 
-                addAutoWindow.DialogResult = true;
+                Auto = autoManager.Insert(Auto);
+
+                DialogResult?.Invoke(true);
             } else
             {
-                MessageBox.Show(String.Join("\n", errMsgs), "Fehler beim Erstellen eines Auto-Eintrags", MessageBoxButton.OK, MessageBoxImage.Warning);
+                displayer.DisplayWarning("Fehler beim Erstellen eines Auto-Eintrags", String.Join("\n", errMsgs));
+                //MessageBox.Show(String.Join("\n", errMsgs), "Fehler beim Erstellen eines Auto-Eintrags", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private void Cancel(Window addAutoWindow)
         {
-            addAutoWindow.DialogResult = false;
+            DialogResult?.Invoke(false);
+        }
+
+        private void ChangeAutoType(AutoKlasse autoType)
+        {
+            switch(autoType)
+            {
+                case AutoKlasse.Luxusklasse:
+                    Auto = new LuxusklasseAuto();
+                    break;
+                case AutoKlasse.Mittelklasse:
+                    Auto = new MittelklasseAuto();
+                    break;
+                case AutoKlasse.Standard:
+                    Auto = new StandardAuto();
+                    break;
+            }
         }
 
         private bool IsValidInputNumber(string input)
@@ -78,7 +126,7 @@ namespace AutoReservation.Presentation.ViewModels
 
         private bool IsValidBasistarif()
         {
-            if (Auto.AutoKlasse != AutoKlasse.Luxusklasse)
+            if (AutoKlasse != AutoKlasse.Luxusklasse)
             {
                 BasistarifString = "0";
             }
