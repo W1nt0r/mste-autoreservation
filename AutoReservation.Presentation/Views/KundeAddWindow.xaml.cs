@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AutoReservation.Common.DataTransferObjects;
+using AutoReservation.Presentation.ViewModels;
 
 namespace AutoReservation.Presentation
 {
@@ -20,24 +21,13 @@ namespace AutoReservation.Presentation
     /// </summary>
     public partial class KundeAddWindow : Window
     {
+        public KundeDetailViewModel Kdvm { get; set; }
 
-        public KundeDto Kunde { get; set; }
-
-        public KundeAddWindow(KundeDto kunde)
+        public KundeAddWindow()
         {
             InitializeComponent();
-            Kunde = kunde;
-            DataContext = this;
-        }
-
-        private void Save_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = true;
-        }
-
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
+            Kdvm = new KundeDetailViewModel();
+            DataContext = Kdvm;
         }
     }
 }

@@ -40,11 +40,11 @@ namespace AutoReservation.Presentation.ViewModels
 
         private void SaveKunde(KundeDto kunde)
         {
-            KundeAddWindow kundeAddWindow = new KundeAddWindow(new KundeDto() { Geburtsdatum = DateTime.Now });
+            KundeAddWindow kundeAddWindow = new KundeAddWindow();
 
             if (kundeAddWindow.ShowDialog() ?? false)
             {
-                Kunden.Add(kundeAddWindow.Kunde);
+                Kunden.Add(kundeAddWindow.Kdvm.Kunde);
             }
         }
 

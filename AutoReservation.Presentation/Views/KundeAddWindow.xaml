@@ -3,15 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AutoReservation.Presentation"
+        xmlns:local="clr-namespace:AutoReservation.Presentation.ViewModels"
+        xmlns:converters="clr-namespace:AutoReservation.Presentation.Converters"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         FontSize="15"
         ResizeMode="NoResize"
-        Title="KundeAddWindow" Height="370" Width="500"
+        Icon="{StaticResource Icon}"
+        d:DataContext="{d:DesignInstance Type=local:KundeDetailViewModel, IsDesignTimeCreatable=True}"
+        Title="KundeAddWindow" Height="400" Width="500"
         >
     <Window.Resources>
-        <ResourceDictionary Source="../Styles/DetailViewStyles.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/DetailViewStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <DockPanel>
         <Grid DockPanel.Dock="Bottom">
@@ -19,25 +26,31 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Content="SPEICHERN" Grid.Column="0" Name="Save" Click="Save_Click"/>
-            <Button Content="ABBRECHEN" Grid.Column="1" Name="Cancel" Click="Cancel_Click"/>
+            <Button Content="SPEICHERN" Grid.Column="0" Name="Save" Command="{Binding SaveKundeCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
+            <Button Content="ABBRECHEN" Grid.Column="1" Name="Cancel" Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
         </Grid>
-        <Grid Margin="10 50 10 50">
+        <Grid Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Vorname" Grid.Row="0" Grid.Column="0"/>
-            <TextBlock Text="Nachname" Grid.Row="1" Grid.Column="0"/>
-            <TextBlock Text="Geburtsdatum" Grid.Row="2" Grid.Column="0"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Kunde.Vorname}"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Kunde.Nachname}"/>
-            <DatePicker Grid.Row="2" Grid.Column="1" Text="{Binding Kunde.Geburtsdatum}"/>
+            <TextBlock Style="{StaticResource Title}" Text="Kunde hinzufügen" Grid.Row="0" Grid.ColumnSpan="2"/>
+            <TextBlock Text="Vorname" Grid.Row="1" Grid.Column="0"/>
+            <TextBlock Text="Nachname" Grid.Row="2" Grid.Column="0"/>
+            <TextBlock Text="Geburtsdatum" Grid.Row="3" Grid.Column="0"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Vorname}" ToolTip="{Binding VornameError}"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Nachname}" ToolTip="{Binding NachnameError}"/>
+            <DatePicker Grid.Row="3" Grid.Column="1" SelectedDate="{Binding Geburtsdatum}" ToolTip="{Binding GeburtsdatumError}"/>
+            <Image Grid.Row="1" Grid.Column="2" Style="{StaticResource Error}" Visibility="{Binding VornameError, Converter={StaticResource ErrorVisibilityConverter}, NotifyOnSourceUpdated=True}" ToolTip="{Binding VornameError}"/>
+            <Image Grid.Row="2" Grid.Column="2" Style="{StaticResource Error}" Visibility="{Binding NachnameError, Converter={StaticResource ErrorVisibilityConverter}, NotifyOnSourceUpdated=True}" ToolTip="{Binding NachnameError}"/>
+            <Image Grid.Row="3" Grid.Column="2" Style="{StaticResource Error}" Visibility="{Binding GeburtsdatumError, Converter={StaticResource ErrorVisibilityConverter}, NotifyOnSourceUpdated=True}" ToolTip="{Binding GeburtsdatumError}"/>
         </Grid>
     </DockPanel>
 </Window>
