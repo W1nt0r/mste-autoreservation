@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AutoReservation.Presentation"
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
-        ResizeMode="CanResizeWithGrip"
+        Icon="{StaticResource Icon}"
         Title="MainWindow" Height="500" Width="800">
     <Window.Resources>
         <ResourceDictionary>

@@ -37,15 +37,19 @@ namespace AutoReservation.Presentation.Views
                 {
                     case 0:
                         {
+                            Avm.Loading = true;
                             Avm.LoadAutoData();
                             break;
                         }
                     case 1:
                         {
+                            Kvm.Loading = true;
+                            Kvm.LoadKundeData();
                             break;
                         }
                     case 2:
                         {
+                            Rvm.Loading = true;
                             Rvm.LoadReservationData();
                             break;
                         }

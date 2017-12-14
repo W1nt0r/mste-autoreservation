@@ -70,6 +70,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\ObjectToTypeConverter.cs" />
     <Compile Include="Converters\StringToVisibilityConverter.cs" />
     <Compile Include="Delegates\DialogResultDelegate.cs" />
@@ -86,9 +87,17 @@
     <Compile Include="Views\ReservationAddWindow.xaml.cs">
       <DependentUpon>ReservationAddWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Styles\CheckBoxStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Styles\DetailViewStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\LabelStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AutoAddWindow.xaml">
       <SubType>Designer</SubType>
@@ -195,7 +204,7 @@
     <Resource Include="Images\error-symbol.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\car-icon.png" />
+    <Resource Include="Images\car-icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

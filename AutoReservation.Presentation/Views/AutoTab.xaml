@@ -4,26 +4,33 @@
                     xmlns:viewmodels="clr-namespace:AutoReservation.Presentation.ViewModels"
                     xmlns:converters="clr-namespace:AutoReservation.Presentation.Converters">
     <converters:ObjectToTypeConverter x:Key="TypeConverter"/>
-
-    <DockPanel x:Key="AutoGrid"  x:Name="AutoGrid">
-        <DockPanel DockPanel.Dock="Top">
-            <Button DockPanel.Dock="Right" Name="AutoAddButton" Content="HINZUFÜGEN" Margin="10" Command="{Binding Avm.AddNewAutoCommand}"/>
-            <Label/>
+    <converters:BooleanToVisibilityConverter x:Key="LoadingVisibilityConverter"/>
+    <converters:BooleanToVisibilityConverter x:Key="EmptyVisibilityConverter"/>
+    <Grid x:Key="AutoGrid"  x:Name="AutoGrid">
+        <Label Visibility="{Binding Avm.Loading, Converter={StaticResource LoadingVisibilityConverter}, Mode=OneWay}" Style="{StaticResource LoadingStyle}"/>
+        <DockPanel>
+            <DockPanel DockPanel.Dock="Top">
+                <Button DockPanel.Dock="Right" Name="AutoAddButton" Content="HINZUFÜGEN" Margin="10" Command="{Binding Avm.AddNewAutoCommand}"/>
+                <Label/>
+            </DockPanel>
+            <Grid>
+                <Label Visibility="{Binding Avm.Empty, Converter={StaticResource EmptyVisibilityConverter}, Mode=OneWay}" Style="{StaticResource EmptyStyle}"/>
+                <DataGrid ItemsSource="{Binding Avm.Autos}" AutoGenerateColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" MinWidth="200" Header="MARKE" Binding="{Binding Marke}"/>
+                        <DataGridTextColumn Width="*" MinWidth="200" Header="AUTOKLASSE" Binding="{Binding Mode=OneWay, Converter={StaticResource TypeConverter}}"/>
+                        <DataGridTextColumn Width="*" MinWidth="200" Header="TAGESTARIF" Binding="{Binding Tagestarif}" />
+                        <DataGridTextColumn Width="*" MinWidth="200" Header="BASISTARIF" Binding="{Binding Basistarif}" />
+                        <DataGridTemplateColumn Width="150" MinWidth="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="LÖSCHEN" Command="{Binding Path=DataContext.Avm.RemoveAutoCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"  CommandParameter="{Binding}" Height="30" Width="Auto" HorizontalAlignment="Stretch" FontSize="15"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
         </DockPanel>
-        <DataGrid ItemsSource="{Binding Avm.Autos}" AutoGenerateColumns="False" CanUserAddRows="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="*" Header="MARKE" Binding="{Binding Marke}"/>
-                <DataGridTextColumn Width="*" Header="AUTOKLASSE" Binding="{Binding Mode=OneWay, Converter={StaticResource TypeConverter}}"/>
-                <DataGridTextColumn Width="*" Header="TAGESTARIF" Binding="{Binding Tagestarif}" />
-                <DataGridTextColumn Width="*" Header="BASISTARIF" Binding="{Binding Basistarif}" />
-                <DataGridTemplateColumn Width="150">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="LÖSCHEN" Command="{Binding Path=DataContext.Avm.RemoveAutoCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"  CommandParameter="{Binding}" Height="30" Width="Auto" HorizontalAlignment="Stretch" FontSize="15"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-    </DockPanel>
+    </Grid>
 </ResourceDictionary>

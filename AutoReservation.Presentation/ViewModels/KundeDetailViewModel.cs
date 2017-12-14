@@ -1,5 +1,8 @@
-﻿using AutoReservation.Common.DataTransferObjects;
+﻿using AutoReservation.BusinessLayer;
+using AutoReservation.Common.DataTransferObjects;
+using AutoReservation.Dal.Entities;
 using AutoReservation.Presentation.Commands;
+using AutoReservation.Presentation.Delegates;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,8 +17,8 @@ namespace AutoReservation.Presentation.ViewModels
 {
     public class KundeDetailViewModel : BindableBase
     {
-        private KundeDto _kunde;
-        public KundeDto Kunde { get { return _kunde; } set { SetProperty(ref _kunde, value); } }
+        private Kunde _kunde;
+        public Kunde Kunde { get { return _kunde; } set { SetProperty(ref _kunde, value); } }
         private string _vorname;
         public string Vorname { get { return _vorname; } set { SetProperty(ref _vorname, value); } }
         private string _vornameError;
@@ -31,12 +34,17 @@ namespace AutoReservation.Presentation.ViewModels
         public ICommand SaveKundeCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
+        public event Result DialogResult;
+
+        private KundeManager kundeManager;
+
         public KundeDetailViewModel()
         {
-            Kunde = new KundeDto();
+            Kunde = new Kunde();
             Geburtsdatum = DateTime.Now.Date;
             SaveKundeCommand = new RelayCommand<Window>(param => SaveKunde(param));
             CancelCommand = new RelayCommand<Window>(param => Cancel(param));
+            kundeManager = new KundeManager();
         }
 
         public void SaveKunde(Window window)
@@ -47,13 +55,15 @@ namespace AutoReservation.Presentation.ViewModels
                 Kunde.Vorname = Vorname;
                 Kunde.Nachname = Nachname;
 
-                window.DialogResult = true;
+                Kunde = kundeManager.Insert(Kunde);
+
+                DialogResult?.Invoke(true);
             }
         }
 
         public void Cancel(Window window)
         {
-            window.DialogResult = false;
+            DialogResult?.Invoke(false);
         }
 
         private string CheckText(string text, string errorMessage, ref bool errorState)

@@ -3,25 +3,33 @@
                     xmlns:local="clr-namespace:AutoReservation.Presentation"
                     xmlns:viewmodels="clr-namespace:AutoReservation.Presentation.ViewModels"
                     xmlns:converters="clr-namespace:AutoReservation.Presentation.Converters">
+    <converters:BooleanToVisibilityConverter x:Key="LoadingVisibilityConverter"/>
+    <converters:BooleanToVisibilityConverter x:Key="EmptyVisibilityConverter"/>
     <converters:DateConverter x:Key="dateConverter"/>
-    <DockPanel x:Key="KundeGrid"  x:Name="KundeGrid">
-        <DockPanel DockPanel.Dock="Top">
-            <Button DockPanel.Dock="Right" Name="KundeAddButton" Content="HINZUFÜGEN" Margin="10" Command="{Binding Kvm.AddNewKundeCommand}"/>
-            <Label/>
+    <Grid x:Key="KundeGrid"  x:Name="KundeGrid">
+        <Label Visibility="{Binding Kvm.Loading, Converter={StaticResource LoadingVisibilityConverter}, Mode=OneWay}" Style="{StaticResource LoadingStyle}"/>
+        <DockPanel>
+            <DockPanel DockPanel.Dock="Top">
+                <Button DockPanel.Dock="Right" Name="KundeAddButton" Content="HINZUFÜGEN" Margin="10" Command="{Binding Kvm.AddNewKundeCommand}"/>
+                <Label/>
+            </DockPanel>
+            <Grid>
+                <Label Visibility="{Binding Kvm.Empty, Converter={StaticResource EmptyVisibilityConverter}, Mode=OneWay}" Style="{StaticResource EmptyStyle}"/>
+                <DataGrid ItemsSource="{Binding Kvm.Kunden}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" MinWidth="200" Header="VORNAME" Binding="{Binding Vorname}"/>
+                        <DataGridTextColumn Width="*" MinWidth="200" Header="NACHNAME" Binding="{Binding Nachname}"/>
+                        <DataGridTextColumn Width="*" MinWidth="200" Header="GEBURTSDATUM" Binding="{Binding Geburtsdatum, Converter={StaticResource dateConverter}, ConverterParameter=Geburtsdatum}" />
+                        <DataGridTemplateColumn MinWidth="150" Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="LÖSCHEN" Command="{Binding Path=DataContext.Kvm.RemoveKundeCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"  CommandParameter="{Binding}" Height="30" Width="Auto" HorizontalAlignment="Stretch" FontSize="15"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>            
         </DockPanel>
-        <DataGrid ItemsSource="{Binding Kvm.Kunden}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="*" MinWidth="200" Header="VORNAME" Binding="{Binding Vorname}"/>
-                <DataGridTextColumn Width="*" MinWidth="200" Header="NACHNAME" Binding="{Binding Nachname}"/>
-                <DataGridTextColumn Width="*" MinWidth="200" Header="GEBURTSDATUM" Binding="{Binding Geburtsdatum, Converter={StaticResource dateConverter}, ConverterParameter=Geburtsdatum}" />
-                <DataGridTemplateColumn MinWidth="150" Width="150">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="LÖSCHEN" Command="{Binding Path=DataContext.Kvm.RemoveKundeCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"  CommandParameter="{Binding}" Height="30" Width="Auto" HorizontalAlignment="Stretch" FontSize="15"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-    </DockPanel>
+    </Grid>    
 </ResourceDictionary>

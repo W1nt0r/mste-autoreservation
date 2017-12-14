@@ -3,29 +3,37 @@
                     xmlns:local="clr-namespace:AutoReservation.Presentation.Views"
                     xmlns:viewmodels="clr-namespace:AutoReservation.Presentation.ViewModels"
                     xmlns:converters="clr-namespace:AutoReservation.Presentation.Converters">
+    <converters:BooleanToVisibilityConverter x:Key="LoadingVisibilityConverter"/>
+    <converters:BooleanToVisibilityConverter x:Key="EmptyVisibilityConverter"/>
     <converters:DateConverter x:Key="dateConverter"/>
     <BooleanToVisibilityConverter x:Key="VisibiltyConverter"/>
-    <DockPanel x:Key="ReservationGrid">
-        <DockPanel DockPanel.Dock="Top">
-            <CheckBox DockPanel.Dock="Left"  IsChecked="{Binding Rvm.Hidden}" Name="HideCheckBox">Verstecke nicht aktuelle</CheckBox>
-            <Button DockPanel.Dock="Right" Name="KundeAddButton" Content="HINZUFÜGEN" Margin="10" Command="{Binding Rvm.AddReservationCommand}"/>
-            <Label/>
+    <Grid x:Key="ReservationGrid">
+        <Label Visibility="{Binding Rvm.Loading, Converter={StaticResource LoadingVisibilityConverter}, Mode=OneWay}" Style="{StaticResource LoadingStyle}"/>
+        <DockPanel>
+            <DockPanel DockPanel.Dock="Top">
+                <CheckBox DockPanel.Dock="Left"  IsChecked="{Binding Rvm.Hidden}" Name="HideCheckBox">Verstecke nicht aktuelle</CheckBox>
+                <Button DockPanel.Dock="Right" Name="KundeAddButton" Content="HINZUFÜGEN" Margin="10" Command="{Binding Rvm.AddReservationCommand}"/>
+                <Label/>
+            </DockPanel>
+            <Grid>
+                <Label Visibility="{Binding Rvm.Empty, Converter={StaticResource EmptyVisibilityConverter}, Mode=OneWay}" Style="{StaticResource EmptyStyle}"/>
+                <DataGrid ItemsSource="{Binding Rvm.Reservationen}" AutoGenerateColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" Header="VON"  Binding="{Binding Von, Converter={StaticResource dateConverter}}"/>
+                        <DataGridTextColumn Width="*" Header="BIS" Binding="{Binding Bis, Converter={StaticResource dateConverter}}"/>
+                        <DataGridTextColumn Width="*" Header="KUNDE VORNAME" Binding="{Binding Kunde.Vorname}"/>
+                        <DataGridTextColumn Width="*" Header="KUNDE NACHNAME" Binding="{Binding Kunde.Nachname}"/>
+                        <DataGridTextColumn Width="*" Header="AUTOMARKE" Binding="{Binding Auto.Marke}"/>
+                        <DataGridTemplateColumn Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="LÖSCHEN" Command="{Binding Path=DataContext.Rvm.RemoveReservationCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"  CommandParameter="{Binding}" Height="30" Width="Auto" HorizontalAlignment="Stretch" FontSize="15"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
         </DockPanel>
-        <DataGrid ItemsSource="{Binding Rvm.Reservationen}" AutoGenerateColumns="False" CanUserAddRows="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="*" Header="VON"  Binding="{Binding Von, Converter={StaticResource dateConverter}}"/>
-                <DataGridTextColumn Width="*" Header="BIS" Binding="{Binding Bis, Converter={StaticResource dateConverter}}"/>
-                <DataGridTextColumn Width="*" Header="KUNDE VORNAME" Binding="{Binding Kunde.Vorname}"/>
-                <DataGridTextColumn Width="*" Header="KUNDE NACHNAME" Binding="{Binding Kunde.Nachname}"/>
-                <DataGridTextColumn Width="*" Header="AUTOMARKE" Binding="{Binding Auto.Marke}"/>
-                <DataGridTemplateColumn Width="150">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="LÖSCHEN" Command="{Binding Path=DataContext.Rvm.RemoveReservationCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"  CommandParameter="{Binding}" Height="30" Width="Auto" HorizontalAlignment="Stretch" FontSize="15"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-    </DockPanel>
+    </Grid>    
 </ResourceDictionary>

@@ -23,6 +23,10 @@ namespace AutoReservation.Presentation.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         private ObservableCollection<Auto> _autos;
         public ObservableCollection<Auto> Autos { get { return _autos; } set { SetProperty(ref _autos, value); } }
+        private bool _loading;
+        public bool Loading { get { return _loading; } set { SetProperty(ref _loading, value); } }
+        private bool _empty;
+        public bool Empty { get { return _empty; } set { SetProperty(ref _empty, value); } }
         public ICommand AddNewAutoCommand { get; set; }
         public ICommand RemoveAutoCommand { get; set; }
 
@@ -61,6 +65,7 @@ namespace AutoReservation.Presentation.ViewModels
             if (autoAddWindow.ShowDialog() ?? false)
             {
                 Autos.Add(autoAddWindow.Advm.Auto);
+                Empty = Autos.Count == 0;
             }
         }
 
@@ -83,7 +88,8 @@ namespace AutoReservation.Presentation.ViewModels
                     Autos.Remove(auto);
                     displayer.DisplayError("Fehler beim Löschen", "Der zu löschende Eintrag existiert nicht in der Datenbank.");
                 }
-                
+                Empty = Autos.Count == 0;
+
             }
         }
 
@@ -102,6 +108,8 @@ namespace AutoReservation.Presentation.ViewModels
             }
 
             Autos = col;
+            Empty = Autos.Count == 0;
+            Loading = false;
         }
     }
 }

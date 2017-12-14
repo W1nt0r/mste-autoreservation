@@ -28,6 +28,12 @@ namespace AutoReservation.Presentation
             InitializeComponent();
             Kdvm = new KundeDetailViewModel();
             DataContext = Kdvm;
+            Kdvm.DialogResult += Result;
+        }
+
+        private void Result(bool dialogResult)
+        {
+            DialogResult = dialogResult;
         }
     }
 }

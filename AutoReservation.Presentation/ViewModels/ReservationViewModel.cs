@@ -25,6 +25,10 @@ namespace AutoReservation.Presentation.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         private bool? _hidden;
         public bool? Hidden { get { return _hidden; } set { SetProperty(ref _hidden, value); StartUpdate(null, null); } }
+        private bool _loading;
+        public bool Loading { get { return _loading; } set { SetProperty(ref _loading, value); } }
+        private bool _empty;
+        public bool Empty { get { return _empty; } set { SetProperty(ref _empty, value); } }
         public ICommand AddReservationCommand { get; set; }
         public ICommand RemoveReservationCommand { get; set; }
         public ICommand FilterReservationsCommand { get; set; }
@@ -80,6 +84,8 @@ namespace AutoReservation.Presentation.ViewModels
                     res.Add(r);
                 }
                 Reservationen = res;
+                Empty = Reservationen.Count == 0;
+                Loading = false;
             });
         }
 
@@ -105,6 +111,7 @@ namespace AutoReservation.Presentation.ViewModels
             if (reservationAddWindow.ShowDialog() ?? false)
             {
                 StartUpdate(null, null);
+                Empty = Reservationen.Count == 0;
             }
         }
 
@@ -130,6 +137,7 @@ namespace AutoReservation.Presentation.ViewModels
                     Reservationen.Remove(reservation);
                     displayer.DisplayError("Fehler beim Löschen", "Der zu löschende Eintrag existiert nicht in der Datenbank.");
                 }
+                Empty = Reservationen.Count == 0;
             }
         }
     }
