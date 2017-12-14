@@ -79,6 +79,7 @@
     <Compile Include="ViewModels\AutoViewModel.cs" />
     <Compile Include="ViewModels\BindableBase.cs" />
     <Compile Include="ViewModels\KundeDetailViewModel.cs" />
+    <Compile Include="ViewModels\ReservationDetailViewModel.cs" />
     <Compile Include="Views\AutoAddWindow.xaml.cs">
       <DependentUpon>AutoAddWindow.xaml</DependentUpon>
     </Compile>
