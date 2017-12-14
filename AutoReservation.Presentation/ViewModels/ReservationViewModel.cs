@@ -1,21 +1,16 @@
 ﻿using AutoReservation.BusinessLayer;
-using AutoReservation.Common.DataTransferObjects;
 using AutoReservation.Dal.Entities;
+using AutoReservation.Presentation.Commands;
 using AutoReservation.Presentation.Views;
-using AutoReservation.Service.Wcf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace AutoReservation.Presentation.ViewModels
 {
@@ -23,20 +18,34 @@ namespace AutoReservation.Presentation.ViewModels
     {
         private ReservationManager resManager;
         public event PropertyChangedEventHandler PropertyChanged;
-        private bool _hidden;
-        public bool Hidden { get { return _hidden; } set { SetProperty(ref _hidden, value); } }
-        public AddCommand AddReservationCommand { get; set; }
-        public RemoveCommand RemoveReservationCommand { get; set; }
-        public FilterCommand FilterReservationsCommand { get; set; }
+        private bool? _hidden;
+        public bool? Hidden { get { return _hidden; } set { SetProperty(ref _hidden, value); StartUpdate(null, null); } }
+        public ICommand AddReservationCommand { get; set; }
+        public ICommand RemoveReservationCommand { get; set; }
+        public ICommand FilterReservationsCommand { get; set; }
+        private Timer timer;
 
-        private System.Timers.Timer timer;
-
-        private ObservableCollection<ReservationDto> _reservationen;
-        public ObservableCollection<ReservationDto> Reservationen
+        private ObservableCollection<Reservation> _reservationen;
+        public ObservableCollection<Reservation> Reservationen
         {
             get
             {
-                return _reservationen;
+                if ((bool)Hidden && _reservationen != null)
+                {
+                    ObservableCollection<Reservation> res = new ObservableCollection<Reservation>();
+                    foreach (Reservation r in _reservationen)
+                    {
+                        if (r.Bis > DateTime.Now)
+                        {
+                            res.Add(r);
+                        }
+                    }
+                    return res;
+                }
+                else
+                {
+                    return _reservationen;
+                }
             }
             set { SetProperty(ref _reservationen, value); }
         }
@@ -45,30 +54,26 @@ namespace AutoReservation.Presentation.ViewModels
         {
             resManager = new ReservationManager();
             Hidden = true;
-            FilterReservationsCommand = new FilterCommand(this);
-            RemoveReservationCommand = new RemoveCommand(this);
-            AddReservationCommand = new AddCommand(this);
-            timer = new System.Timers.Timer(5000);
-            timer.Elapsed += startUpdate;
+            RemoveReservationCommand = new RelayCommand<Reservation>(param => DeleteReservation(param));
+            AddReservationCommand = new RelayCommand<Reservation>(param => SaveReservation(param));
+            timer = new Timer(1000);
+            timer.Elapsed += StartUpdate;
             timer.Start();
         }
-        private void startUpdate(Object source, ElapsedEventArgs e)
+        private void StartUpdate(Object source, ElapsedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            Task.Run(() =>
             {
-                var updatedData = resManager.List;
-                ObservableCollection<ReservationDto> res = new ObservableCollection<ReservationDto>();
+                List<Reservation> updatedData = resManager.List;
+                updatedData.Sort((x, y) => x.Von.CompareTo(y.Von));
+
+                ObservableCollection<Reservation> res = new ObservableCollection<Reservation>();
                 foreach (Reservation r in updatedData)
                 {
-                    res.Add(r.ConvertToDto());
+                    res.Add(r);
                 }
                 Reservationen = res;
-            }));
-        }
-
-        private void UpdateReservations()
-        {
-            
+            });
         }
 
         private bool SetProperty<T>(ref T field, T value, [CallerMemberName] string name = null)
@@ -82,73 +87,27 @@ namespace AutoReservation.Presentation.ViewModels
             return true;
         }
 
-    }
-
-    public class AddCommand : ICommand
-    {
-        public event EventHandler CanExecuteChanged;
-        private ReservationViewModel ViewModel { get; set; }
-        public AddCommand(ReservationViewModel ViewModel)
+        public void LoadReservationData()
         {
-            this.ViewModel = ViewModel;
+            StartUpdate(null, null);
         }
 
-        public bool CanExecute(object parameter)
+        private void SaveReservation(Reservation reservation)
         {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            Console.WriteLine("Entered Add Command");
             ReservationAddWindow reservationAddWindow = new ReservationAddWindow();
             if (reservationAddWindow.ShowDialog() ?? false)
             {
-                ViewModel.Reservationen.Add(reservationAddWindow.rdvm.Reservation);
+                StartUpdate(null, null);
             }
         }
-    }
 
-    public class RemoveCommand : ICommand
-    {
-        public event EventHandler CanExecuteChanged;
-        public ReservationViewModel ViewModel { get; set; }
-        public RemoveCommand(ReservationViewModel ViewModel)
+        private void DeleteReservation(Reservation reservation)
         {
-            this.ViewModel = ViewModel;
-        }
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            Console.WriteLine("Entered RemoveCommand");
-            ReservationDto reservation = (ReservationDto)parameter;
-            if (reservation != default(ReservationDto) && MessageBox.Show("Wollen Sie diese Reservation wirklich löschen?", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (reservation != default(Reservation) && MessageBox.Show("Wollen Sie diese Reservation wirklich löschen?", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                ViewModel.Reservationen.Remove(reservation);
+                resManager.Delete(reservation);
+                Reservationen.Remove(reservation);
             }
-        }
-    }
-
-    public class FilterCommand : ICommand
-    {
-        public event EventHandler CanExecuteChanged;
-        public ReservationViewModel ViewModel { get; set; }
-        public FilterCommand(ReservationViewModel ViewModel)
-        {
-            this.ViewModel = ViewModel;
-        }
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            ViewModel.Hidden = !ViewModel.Hidden;
         }
     }
 }

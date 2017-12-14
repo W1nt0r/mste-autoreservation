@@ -7,6 +7,7 @@
     <BooleanToVisibilityConverter x:Key="VisibiltyConverter"/>
     <DockPanel x:Key="ReservationGrid">
         <DockPanel DockPanel.Dock="Top">
+            <CheckBox DockPanel.Dock="Left"  IsChecked="{Binding Rvm.Hidden}" Name="HideCheckBox">Verstecke nicht aktuelle</CheckBox>
             <Button DockPanel.Dock="Right" Name="KundeAddButton" Content="HINZUFÜGEN" Margin="10" Command="{Binding Rvm.AddReservationCommand}"/>
             <Label/>
         </DockPanel>

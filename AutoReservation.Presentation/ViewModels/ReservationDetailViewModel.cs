@@ -9,15 +9,15 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using AutoReservation.Service.Wcf;
+
 
 namespace AutoReservation.Presentation.ViewModels
 {
     public class ReservationDetailViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private ReservationDto _reservation;
-        public ReservationDto Reservation { get { return _reservation; } set { SetProperty(ref _reservation, value); } }
+        private Reservation _reservation;
+        public Reservation Reservation { get { return _reservation; } set { SetProperty(ref _reservation, value); } }
         private DateTime _von;
         public DateTime Von { get { return _von; } set { SetProperty(ref _von, value); } }
         private DateTime _bis;
@@ -70,20 +70,20 @@ namespace AutoReservation.Presentation.ViewModels
         {
            if(CheckFields().Count == 0)
             {
-                Reservation = new ReservationDto();
-                Reservation.Auto = Autos[AutoId-1].ConvertToDto();
-                Reservation.Kunde = Kunden[KundeId-1].ConvertToDto();
+                Reservation = new Reservation();
+                Reservation.AutoId = AutoId;
+                Reservation.KundeId = KundeId;
                 Reservation.Von = Von;
                 Reservation.Bis = Bis;
-                if (new ReservationManager().IsAutoAvailable(Reservation.ConvertToEntity()))
+                if (new ReservationManager().IsAutoAvailable(Reservation))
                 {
+                    new ReservationManager().Insert(Reservation);
                     addReservationWindow.DialogResult = true;
                 }
                 else
                 {
                     MessageBox.Show("Fehler: Dieses Auto ist in diesem Zeitraum leider nicht verfügbar.");
                 }
-                
             }
             else
             {
@@ -98,10 +98,7 @@ namespace AutoReservation.Presentation.ViewModels
 
         private bool DatesAreValid()
         {
-            if (Von < DateTime.Now || Bis < DateTime.Now)
-            {
-                return false;
-            }
+           
             if(Von.AddHours(24) > Bis)
             {
                 return false;
@@ -116,7 +113,7 @@ namespace AutoReservation.Presentation.ViewModels
             List<String> errMsgs = new List<string>();
             if (!DatesAreValid())
             {
-                errMsgs.Add("Die Datumsrange ist nicht gültig");
+                errMsgs.Add("Der Datumsrange ist nicht gültig");
             }
             return errMsgs;
         }
