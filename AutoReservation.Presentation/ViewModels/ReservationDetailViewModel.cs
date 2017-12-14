@@ -70,9 +70,9 @@ namespace AutoReservation.Presentation.ViewModels
 
         public ReservationDetailViewModel() : this(new MessageBoxDisplayer())
         {
-           
+
         }
-        
+
 
         private bool SetProperty<T>(ref T field, T value, [CallerMemberName] string name = null)
         {
@@ -87,8 +87,7 @@ namespace AutoReservation.Presentation.ViewModels
 
         private void SaveReservation(Window addReservationWindow)
         {
-            AutoId = 10999;
-           if(CheckFields().Count == 0)
+            if (CheckFields().Count == 0)
             {
                 Reservation = new Reservation();
                 Reservation.AutoId = AutoId;
@@ -118,23 +117,23 @@ namespace AutoReservation.Presentation.ViewModels
 
         private bool DatesAreValid()
         {
-           
-            if(Von.AddHours(24) > Bis)
+
+            if (Von.AddHours(24) > Bis)
             {
                 return false;
             }
-            
+
             return true;
         }
 
         private bool KundeIsValid()
         {
-            return (Kunden.Any(x=>x.Id ==KundeId));
+            return (Kunden.Any(x => x.Id == KundeId));
         }
 
         private bool AutoIsValid()
         {
-            return (Autos.Any(x=>x.Id==AutoId));
+            return (Autos.Any(x => x.Id == AutoId));
         }
 
         private List<string> CheckFields()
@@ -152,7 +151,7 @@ namespace AutoReservation.Presentation.ViewModels
             {
                 errMsgs.Add("Bitte wähle ein Auto");
             }
-            
+
             return errMsgs;
         }
     }
