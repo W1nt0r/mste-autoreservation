@@ -1,5 +1,8 @@
-﻿using AutoReservation.Common.DataTransferObjects;
+﻿using AutoReservation.BusinessLayer;
+using AutoReservation.Dal.Entities;
 using AutoReservation.Presentation.Commands;
+using AutoReservation.Presentation.Interfaces;
+using AutoReservation.Presentation.Services;
 using AutoReservation.Presentation.Views;
 using System;
 using System.Collections.Generic;
@@ -17,14 +20,26 @@ namespace AutoReservation.Presentation.ViewModels
     public class AutoViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public ObservableCollection<AutoDto> Autos { get; set; }
+        private ObservableCollection<Auto> _autos;
+        public ObservableCollection<Auto> Autos { get { return _autos; } set { SetProperty(ref _autos, value); } }
         public ICommand AddNewAutoCommand { get; set; }
         public ICommand RemoveAutoCommand { get; set; }
 
-        public AutoViewModel()
+        private AutoManager autoManager;
+        private IMessageDisplayer displayer;
+
+        public AutoViewModel() : this(new MessageBoxDisplayer())
         {
-            AddNewAutoCommand = new RelayCommand<AutoDto>(param => SaveAuto(param));
-            RemoveAutoCommand = new RelayCommand<AutoDto>(param => DeleteAuto(param));
+            
+        }
+
+        public AutoViewModel(IMessageDisplayer displayer)
+        {
+            Autos = new ObservableCollection<Auto>();
+            AddNewAutoCommand = new RelayCommand<Auto>(param => SaveAuto(param));
+            RemoveAutoCommand = new RelayCommand<Auto>(param => DeleteAuto(param));
+            autoManager = new AutoManager();
+            this.displayer = displayer;
         }
 
         private bool SetProperty<T>(ref T field, T value, [CallerMemberName] string name = null)
@@ -38,7 +53,7 @@ namespace AutoReservation.Presentation.ViewModels
             return true;
         }
 
-        private void SaveAuto(AutoDto auto)
+        private void SaveAuto(Auto auto)
         {
             AutoAddWindow autoAddWindow = new AutoAddWindow();
 
@@ -48,12 +63,31 @@ namespace AutoReservation.Presentation.ViewModels
             }
         }
 
-        private void DeleteAuto(AutoDto auto)
+        private void DeleteAuto(Auto auto)
         {
-            if (auto != default(AutoDto) && MessageBox.Show("Wollen Sie diesen Eintrag wirklich löschen?", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            //if (auto != default(Auto) && MessageBox.Show("Wollen Sie diesen Eintrag wirklich löschen?", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (auto != default(Auto) && displayer.DisplayDialog("Löschen", "Wollen Sie diesen Eintrag wirklich löschen?")) 
             {
+                autoManager.Delete(auto);
                 Autos.Remove(auto);
             }
+        }
+
+        public void LoadAutoData()
+        {
+            Task.Run(() => LoadAutoDataWorkingThread());
+        }
+
+        private void LoadAutoDataWorkingThread()
+        {
+            ObservableCollection<Auto> col = new ObservableCollection<Auto>();
+
+            foreach (Auto auto in autoManager.List)
+            {
+                col.Add(auto);
+            }
+
+            Autos = col;
         }
     }
 }

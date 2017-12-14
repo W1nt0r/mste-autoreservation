@@ -27,7 +27,13 @@ namespace AutoReservation.Presentation.Views
             InitializeComponent();
 
             Advm = new AutoDetailViewModel();
+            Advm.DialogResult += Result;
             DataContext = Advm;
+        }
+
+        private void Result(bool result)
+        {
+            DialogResult = result;
         }
     }
 }

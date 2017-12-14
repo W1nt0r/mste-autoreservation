@@ -24,6 +24,16 @@ namespace AutoReservation.Service.Wcf.Testing
             TestEnvironmentHelper.InitializeTestData();
         }
 
+        [TestCleanup]
+        public void CleanUp()
+        {
+            CallbackSpy.AutoSpy.Clear();
+            CallbackSpy.KundeSpy.Clear();
+            CallbackSpy.ReservationSpy.Clear();
+            CallbackSpy.IsAvailable = null;
+            CallbackSpy.ExceptionSpy = null;
+        }
+
         #region Read all entities
 
         [TestMethod]
@@ -336,6 +346,7 @@ namespace AutoReservation.Service.Wcf.Testing
             AutoDto auto = new AutoDto { Id = 3, Marke = "Tesla", Tagestarif = 320, Basistarif = 10 };
             Target.UpdateAuto(auto);
             CallbackSpy.WaitForAnswer();
+            CallbackSpy.AutoSpy.Clear();
             string ex = CallbackSpy.ExceptionSpy;
             CallbackSpy.ExceptionSpy = null;
             Assert.AreEqual(ex, $"Update Auto: Concurrency-Fehler");
