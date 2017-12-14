@@ -1,4 +1,5 @@
 ﻿using AutoReservation.BusinessLayer;
+using AutoReservation.BusinessLayer.Exceptions;
 using AutoReservation.Common.DataTransferObjects;
 using AutoReservation.Dal.Entities;
 using AutoReservation.Presentation.Commands;
@@ -77,19 +78,26 @@ namespace AutoReservation.Presentation.ViewModels
             {
                 Auto.Marke = MarkeString;
                 Auto.Tagestarif = int.Parse(TagestarifString);
-                //Auto.Basistarif = int.Parse(BasistarifString);
+
                 if(Auto is LuxusklasseAuto)
                 {
                     ((LuxusklasseAuto)Auto).Basistarif = int.Parse(BasistarifString);
                 }
 
-                Auto = autoManager.Insert(Auto);
+                try
+                {
+                    Auto = autoManager.Insert(Auto);
 
-                DialogResult?.Invoke(true);
-            } else
+                    DialogResult?.Invoke(true);
+                }
+                catch (DatabaseChangeException)
+                {
+                    displayer.DisplayError("Fehler beim Speichern", "Der Eintrag konnte nicht in die Datenbank gespeichert werden!");
+                }
+            }
+            else
             {
                 displayer.DisplayWarning("Fehler beim Erstellen eines Auto-Eintrags", String.Join("\n", errMsgs));
-                //MessageBox.Show(String.Join("\n", errMsgs), "Fehler beim Erstellen eines Auto-Eintrags", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

@@ -10,5 +10,6 @@ namespace AutoReservation.Presentation.Interfaces
     {
         void DisplayWarning(string title, string message);
         bool DisplayDialog(string title, string message);
+        void DisplayError(string title, string message);
     }
 }

@@ -10,6 +10,7 @@
         WindowStartupLocation="CenterScreen"
         FontSize="15"
         ResizeMode="NoResize"
+        Icon="{StaticResource Icon}"
         Title="AutoAddWindow" Height="450" Width="500">
     <Window.Resources>
         <ResourceDictionary>
