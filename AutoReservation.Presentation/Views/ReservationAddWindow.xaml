@@ -44,13 +44,15 @@
                 ItemsSource="{Binding Kunden}"
                 DisplayMemberPath="Vorname"
                 SelectedValuePath="Id"
-                SelectedValue="{Binding KundeId}">
+                SelectedValue="{Binding KundeId}"
+                SelectedIndex="0">
             </ComboBox>
             <ComboBox Grid.Row="2" Grid.Column="1" Name="AutoComboBox"
                 ItemsSource="{Binding Autos}"
                 DisplayMemberPath="Marke"
                 SelectedValue="{Binding AutoId}"
-                SelectedValuePath="Id">
+                SelectedValuePath="Id"
+                SelectedIndex="0">
             </ComboBox>
             <DatePicker SelectedDateChanged="VonDatePicker_SelectedDateChanged" SelectedDate="{Binding Von}"  Grid.Row="3" Grid.Column="1" Name="VonDatePicker"></DatePicker>
             <DatePicker SelectedDate="{Binding Bis}" Grid.Row="4" Grid.Column="1" Name="BisDatePicker"></DatePicker>

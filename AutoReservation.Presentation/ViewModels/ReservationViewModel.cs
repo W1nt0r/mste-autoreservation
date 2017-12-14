@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
+using System.Linq;
 
 namespace AutoReservation.Presentation.ViewModels
 {
@@ -32,15 +33,12 @@ namespace AutoReservation.Presentation.ViewModels
             {
                 if ((bool)Hidden && _reservationen != null)
                 {
-                    ObservableCollection<Reservation> res = new ObservableCollection<Reservation>();
-                    foreach (Reservation r in _reservationen)
-                    {
-                        if (r.Bis > DateTime.Now)
-                        {
-                            res.Add(r);
-                        }
+                    var res = _reservationen.Where(x => x.Bis > DateTime.Now);
+                    ObservableCollection<Reservation> re = new ObservableCollection<Reservation>();
+                    foreach (Reservation r in res){
+                        re.Add(r);
                     }
-                    return res;
+                    return re;
                 }
                 else
                 {

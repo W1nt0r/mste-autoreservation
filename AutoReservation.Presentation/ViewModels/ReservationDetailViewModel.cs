@@ -9,7 +9,10 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-
+using System.Linq;
+using AutoReservation.Presentation.Views;
+using AutoReservation.Presentation.Interfaces;
+using AutoReservation.Presentation.Services;
 
 namespace AutoReservation.Presentation.ViewModels
 {
@@ -34,26 +37,42 @@ namespace AutoReservation.Presentation.ViewModels
         private ObservableCollection<Kunde> _kunden;
         public ObservableCollection<Kunde> Kunden { get { return _kunden; } set { SetProperty(ref _kunden, value); } }
 
-        public ReservationDetailViewModel()
+        private IMessageDisplayer displayer;
+
+        public ReservationDetailViewModel(IMessageDisplayer displayer)
         {
+            this.displayer = displayer;
+
             Von = DateTime.Now;
             Bis = DateTime.Now.AddDays(1);
-            
+
             Autos = new ObservableCollection<Auto>();
-            foreach (Auto a in new AutoManager().List){
+            foreach (Auto a in new AutoManager().List)
+            {
                 Autos.Add(a);
             }
-            AutoId = 1;
             Kunden = new ObservableCollection<Kunde>();
-            foreach(Kunde k in new KundeManager().List)
+            foreach (Kunde k in new KundeManager().List)
             {
                 Kunden.Add(k);
+            }
+
+            if (Autos.Count == 0 || Kunden.Count == 0)
+            {
+                //MessageBox.Show("Achtung: Sie müssen zuerst Autos und Kunden registrieren, bevor Sie Reservationen anlegen können");
+                displayer.DisplayWarning("Achtung", "Sie müssen zuerst Autos und Kunden registrieren, bevor Sie Reservationen anlegen können");
+                Application.Current.Windows.OfType<ReservationAddWindow>().First().Loaded += (s, e) => Application.Current.Windows.OfType<ReservationAddWindow>().First().DialogResult = false;
             }
             KundeId = 1;
             SaveReservationCommand = new RelayCommand<Window>(param => SaveReservation(param));
             CancelCommand = new RelayCommand<Window>(param => Cancel(param));
         }
-        
+
+        public ReservationDetailViewModel() : this(new MessageBoxDisplayer())
+        {
+
+        }
+
 
         private bool SetProperty<T>(ref T field, T value, [CallerMemberName] string name = null)
         {
@@ -68,7 +87,7 @@ namespace AutoReservation.Presentation.ViewModels
 
         private void SaveReservation(Window addReservationWindow)
         {
-           if(CheckFields().Count == 0)
+            if (CheckFields().Count == 0)
             {
                 Reservation = new Reservation();
                 Reservation.AutoId = AutoId;
@@ -98,15 +117,24 @@ namespace AutoReservation.Presentation.ViewModels
 
         private bool DatesAreValid()
         {
-           
-            if(Von.AddHours(24) > Bis)
+
+            if (Von.AddHours(24) > Bis)
             {
                 return false;
             }
-            
+
             return true;
         }
 
+        private bool KundeIsValid()
+        {
+            return (Kunden.Any(x => x.Id == KundeId));
+        }
+
+        private bool AutoIsValid()
+        {
+            return (Autos.Any(x => x.Id == AutoId));
+        }
 
         private List<string> CheckFields()
         {
@@ -115,6 +143,15 @@ namespace AutoReservation.Presentation.ViewModels
             {
                 errMsgs.Add("Der Datumsrange ist nicht gültig");
             }
+            if (!KundeIsValid())
+            {
+                errMsgs.Add("Bitte wähle einen Kunden aus");
+            }
+            if (!AutoIsValid())
+            {
+                errMsgs.Add("Bitte wähle ein Auto");
+            }
+
             return errMsgs;
         }
     }
