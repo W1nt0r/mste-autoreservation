@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         ResizeMode="CanResizeWithGrip"
-        Title="MainWindow" Height="500" Width="700">
+        Title="MainWindow" Height="500" Width="800">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

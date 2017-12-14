@@ -5,8 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoReservation.Presentation.Views"
         mc:Ignorable="d"
-        Title="ReservationAddWindow" Height="300" Width="300">
-    <Grid>
-        
-    </Grid>
+        Title="ReservationAddWindow" Height="450" Width="500">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/DetailViewStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel>
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="SPEICHERN" Grid.Column="0" Name="Save" Command="{Binding SaveReservationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
+            <Button Content="ABBRECHEN" Grid.Column="1" Name="Cancel" Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
+        </Grid>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Style="{StaticResource Title}" Text="Reservation hinzufügen" Grid.Row="0" Grid.ColumnSpan="2"/>
+            <TextBlock Text="Kunde" Grid.Row="1" Grid.Column="0"/>
+            <TextBlock Text="Auto" Grid.Row="2" Grid.Column="0"/>
+            <TextBlock Text="Von" Grid.Row="3" Grid.Column="0"/>
+            <TextBlock Text="Bis" Grid.Row="4" Grid.Column="0"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" Name="KundeComboBox" 
+                ItemsSource="{Binding Kunden}"
+                DisplayMemberPath="Vorname"
+                SelectedValuePath="Id"
+                SelectedValue="{Binding KundeId}">
+            </ComboBox>
+            <ComboBox Grid.Row="2" Grid.Column="1" Name="AutoComboBox"
+                ItemsSource="{Binding Autos}"
+                DisplayMemberPath="Marke"
+                SelectedValue="{Binding AutoId}"
+                SelectedValuePath="Id">
+            </ComboBox>
+            <DatePicker SelectedDateChanged="VonDatePicker_SelectedDateChanged" SelectedDate="{Binding Von}"  Grid.Row="3" Grid.Column="1" Name="VonDatePicker"></DatePicker>
+            <DatePicker SelectedDate="{Binding Bis}" Grid.Row="4" Grid.Column="1" Name="BisDatePicker"></DatePicker>
+        </Grid>
+    </DockPanel>
 </Window>
