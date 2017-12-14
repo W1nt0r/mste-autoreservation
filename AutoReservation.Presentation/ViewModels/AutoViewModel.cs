@@ -1,4 +1,5 @@
 ﻿using AutoReservation.BusinessLayer;
+using AutoReservation.BusinessLayer.Exceptions;
 using AutoReservation.Dal.Entities;
 using AutoReservation.Presentation.Commands;
 using AutoReservation.Presentation.Interfaces;
@@ -65,11 +66,24 @@ namespace AutoReservation.Presentation.ViewModels
 
         private void DeleteAuto(Auto auto)
         {
-            //if (auto != default(Auto) && MessageBox.Show("Wollen Sie diesen Eintrag wirklich löschen?", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             if (auto != default(Auto) && displayer.DisplayDialog("Löschen", "Wollen Sie diesen Eintrag wirklich löschen?")) 
             {
-                autoManager.Delete(auto);
-                Autos.Remove(auto);
+                try
+                {
+                    autoManager.Delete(auto);
+                    Autos.Remove(auto);
+                } catch(DatabaseChangeException)
+                {
+                    displayer.DisplayError("Fehler beim Löschen", "Der Eintrag konnte nicht aus der Datenbank gelöscht werden!");
+                } catch (OptimisticConcurrencyException<Auto>)
+                {
+                    displayer.DisplayError("Fehler beim Löschen", "Es ist ein Nebenläufigkeitsproblem aufgetreten. Bitte versuchen Sie es erneut.");
+                } catch(EntityNotFoundException)
+                {
+                    Autos.Remove(auto);
+                    displayer.DisplayError("Fehler beim Löschen", "Der zu löschende Eintrag existiert nicht in der Datenbank.");
+                }
+                
             }
         }
 
