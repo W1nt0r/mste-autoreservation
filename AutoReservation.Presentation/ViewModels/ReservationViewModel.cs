@@ -12,11 +12,15 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System.Linq;
+using AutoReservation.BusinessLayer.Exceptions;
+using AutoReservation.Presentation.Interfaces;
+using AutoReservation.Presentation.Services;
 
 namespace AutoReservation.Presentation.ViewModels
 {
     public class ReservationViewModel : INotifyPropertyChanged
     {
+        private IMessageDisplayer displayer;
         private ReservationManager resManager;
         public event PropertyChangedEventHandler PropertyChanged;
         private bool? _hidden;
@@ -47,9 +51,9 @@ namespace AutoReservation.Presentation.ViewModels
             }
             set { SetProperty(ref _reservationen, value); }
         }
-
-        public ReservationViewModel()
+        public ReservationViewModel(IMessageDisplayer messageDisplayer)
         {
+            this.displayer = messageDisplayer;
             resManager = new ReservationManager();
             Hidden = true;
             RemoveReservationCommand = new RelayCommand<Reservation>(param => DeleteReservation(param));
@@ -57,6 +61,11 @@ namespace AutoReservation.Presentation.ViewModels
             timer = new Timer(1000);
             timer.Elapsed += StartUpdate;
             timer.Start();
+        }
+
+        public ReservationViewModel() : this(new MessageBoxDisplayer())
+        {
+            
         }
         private void StartUpdate(Object source, ElapsedEventArgs e)
         {
@@ -103,8 +112,24 @@ namespace AutoReservation.Presentation.ViewModels
         {
             if (reservation != default(Reservation) && MessageBox.Show("Wollen Sie diese Reservation wirklich löschen?", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                resManager.Delete(reservation);
-                Reservationen.Remove(reservation);
+                try
+                {
+                    resManager.Delete(reservation);
+                    Reservationen.Remove(reservation);
+                }
+                catch (DatabaseChangeException)
+                {
+                    displayer.DisplayError("Fehler beim Löschen", "Der Eintrag konnte nicht aus der Datenbank gelöscht werden!");
+                }
+                catch (OptimisticConcurrencyException<Auto>)
+                {
+                    displayer.DisplayError("Fehler beim Löschen", "Es ist ein Nebenläufigkeitsproblem aufgetreten. Bitte versuchen Sie es erneut.");
+                }
+                catch (EntityNotFoundException)
+                {
+                    Reservationen.Remove(reservation);
+                    displayer.DisplayError("Fehler beim Löschen", "Der zu löschende Eintrag existiert nicht in der Datenbank.");
+                }
             }
         }
     }

@@ -87,7 +87,8 @@ namespace AutoReservation.Presentation.ViewModels
 
         private void SaveReservation(Window addReservationWindow)
         {
-            if (CheckFields().Count == 0)
+            var errors = CheckFields();
+            if (errors.Count == 0)
             {
                 Reservation = new Reservation();
                 Reservation.AutoId = AutoId;
@@ -101,12 +102,17 @@ namespace AutoReservation.Presentation.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Fehler: Dieses Auto ist in diesem Zeitraum leider nicht verfügbar.");
+                    displayer.DisplayError("Fehler","Dieses Auto ist in diesem Zeitraum leider nicht verfügbar.");
                 }
             }
             else
             {
-                MessageBox.Show("Sorry. Fählerhafti igab");
+                string error = "";
+                foreach(string s in errors)
+                {
+                    error += s + "\n";
+                }
+                displayer.DisplayError("Fehler", error);
             }
         }
 
