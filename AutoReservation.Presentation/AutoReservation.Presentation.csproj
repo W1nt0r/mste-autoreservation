@@ -71,6 +71,10 @@
     <Compile Include="Views\ReservationAddWindow.xaml.cs">
       <DependentUpon>ReservationAddWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Styles\DetailViewStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AutoAddWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -158,9 +162,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AutoReservation.BusinessLayer\AutoReservation.BusinessLayer.csproj">
+      <Project>{1f53d0ef-0521-4155-835c-c2a04d9fe5de}</Project>
+      <Name>AutoReservation.BusinessLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AutoReservation.Common\AutoReservation.Common.csproj">
       <Project>{22972439-3fff-41d2-b5ae-6c06abc66eb4}</Project>
       <Name>AutoReservation.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoReservation.Dal\AutoReservation.Dal.csproj">
+      <Project>{ab98ac63-032f-4050-9755-1e2235e9f1dd}</Project>
+      <Name>AutoReservation.Dal</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
